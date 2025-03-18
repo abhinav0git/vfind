@@ -6,7 +6,6 @@ import { useState, useRef } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Camera, Link, Upload, Search, ArrowRight, CheckCircle2, ImageIcon } from "lucide-react"
 
 // Move the featureVariants definition outside of the main component, right before the LandingPage component definition
@@ -29,32 +28,23 @@ export default function LandingPage() {
   const [image, setImage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isUploaded, setIsUploaded] = useState(false)
+  const [isSearchSuccess, setIsSearchSuccess] = useState(false)
+  const [searchResult, setSearchResult] = useState<any>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        if (event.target) {
-          setImage(event.target.result as string)
-          setIsUploaded(true)
-        }
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
   const handleDragOver = (e: React.DragEvent) => {
+    console.log("Dragging over")
     e.preventDefault()
     setIsDragging(true)
   }
 
   const handleDragLeave = () => {
+    console.log("Dragged out")
     setIsDragging(false)
   }
 
   const handleDrop = (e: React.DragEvent) => {
+    console.log("Dropped")
     e.preventDefault()
     setIsDragging(false)
 
@@ -71,13 +61,76 @@ export default function LandingPage() {
     }
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("File changed")
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        if (event.target) {
+          setImage(event.target.result as string)
+          setIsUploaded(true)
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const handleImageLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setImage(e.target.value)
   }
 
-  const handleSearch = () => {
-    // search functionality
-    console.log("Searching with image:", image)
+  const handleRetry = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("Retry image")
+    e.preventDefault()
+
+    setImage(null)
+    setIsUploaded(false)
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "" // Clear file input val
+    }
+  }
+
+  const handleSearch = async () => {
+
+    console.dir("Searching with image:", image?.slice(0, 30))
+    setSearchResult(null)
+
+    if (!image)
+      return
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/search",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: image.split(",")[1] }),
+        })
+
+      const data = await response.json()
+      console.dir("DATA fetch:", data?.toString())
+
+
+      if (!response.ok) {
+        console.log("Error searching with image:", response.statusText)
+      }
+
+      else {
+        setSearchResult(data)
+        setIsSearchSuccess(true)
+        console.log("Search success!!", response.statusText)
+        console.log("response:", data.toString())
+      }
+
+      console.log("Search done!")
+    }
+
+    catch (error) {
+      console.error("Error searching with image:", error)
+    }
   }
 
   const containerVariants = {
@@ -104,8 +157,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 ">
-
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 geist-mono-regular">
       {/* bg decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-duration-5000"></div>
@@ -113,7 +165,6 @@ export default function LandingPage() {
         <div className="absolute -bottom-40 left-40 w-96 h-96 bg-violet-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000 animation-duration-7000"></div>
         <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-3000 animation-duration-8000"></div>
       </div>
-
 
       {/* Header */}
       <header className="w-full max-w-screen-2xl px-8 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff40_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
@@ -159,7 +210,11 @@ export default function LandingPage() {
               variants={itemVariants}
               className="space-mono-bold-italic text-4xl md:text-5xl lg:text-6xl tracking-tight text-slate-900 dark:text-white"
             >
-              Find Any Product <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-2 before:bg-sky-500"><span className="font-serif relative text-white">Online</span></span> with an Image
+              Find Any Product{" "}
+              <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-2 before:bg-sky-500">
+                <span className="font-serif relative text-white">Online</span>
+              </span>{" "}
+              with an Image
             </motion.h1>
             <motion.p variants={itemVariants} className="text-lg text-slate-600 dark:text-slate-300 mt-6">
               Upload an image or paste an image link to discover matching products instantly. Our AI-powered visual
@@ -183,11 +238,12 @@ export default function LandingPage() {
               className="relative z-10"
             >
               <Image
-                src="/placeholder.svg?height=400&width=500"
+                src="/placeholder.svg?height=200&width=250"
                 alt="Product illustration"
-                width={500}
-                height={400}
+                width={250}
+                height={200}
                 className="w-full h-auto rounded-2xl shadow-2xl"
+                priority
               />
             </motion.div>
             <div className="absolute -bottom-4 -right-4 w-full h-full bg-gradient-to-br from-primary/10 to-purple-400/10 rounded-2xl -z-9"></div>
@@ -210,13 +266,10 @@ export default function LandingPage() {
                   Drag and drop your image or paste a URL to find similar products online.
                 </p>
 
-                <div
-                  className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-colors ${isDragging
-                    ? "border-primary bg-primary/5"
-                    : isUploaded
-                      ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                      : "border-slate-300 dark:border-slate-600 hover:border-primary"
-                    }`}
+                <div className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-colors ${isDragging ? "border-primary bg-primary/5"
+                  : isUploaded ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                    : "border-slate-300 dark:border-slate-600 hover:border-primary"
+                  }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
@@ -239,6 +292,9 @@ export default function LandingPage() {
                         exit={{ opacity: 0, scale: 0.8 }}
                         className="flex flex-col items-center"
                       >
+                        <Button size="sm" variant="outline" onClick={handleRetry} className="mb-2 bg-red-400">
+                          Retry!?
+                        </Button>
                         <CheckCircle2 className="h-12 w-12 text-green-500 mb-2" />
                         <p className="text-green-600 dark:text-green-400 font-medium">Image uploaded successfully!</p>
                       </motion.div>
@@ -252,60 +308,97 @@ export default function LandingPage() {
                       >
                         <Upload className="h-12 w-12 text-slate-400 mb-2" />
                         <p className="font-medium">Drag & drop your image here or click to browse</p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                          Supports JPG & PNG (max 5MB)
-                        </p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Supports JPG & PNG (max 5MB)</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
+                <div className="flex mt-2 justify-center">
+                  <Button onClick={handleSearch} className="items-center">
+                    <Search className="h-4 w-4" /> Search
+                  </Button>
+                </div>
 
-                <div className="flex items-center gap-2 mb-6">
+
+                {/* <div className="flex items-center gap-2 mb-6">
                   <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
                   <span className="text-sm text-slate-500 dark:text-slate-400">OR</span>
                   <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
-                </div>
+                </div> */}
 
-                <div className="flex gap-3">
-                  <Input
+                {/* <div className="flex gap-3"> */}
+                {/* <div className="flex"> */}
+                {/* <Input
                     placeholder="Paste image URL here"
                     className="flex-1"
                     onChange={handleImageLinkChange}
                     value={image || ""}
-                  />
-                  <Button onClick={handleSearch} className="gap-2">
-                    <Search className="h-4 w-4" /> Search
-                  </Button>
-                </div>
+                  /> */}
+                {/* <Button onClick={handleSearch} className="">
+                  <Search className="h-4 w-4" /> Search
+                </Button> */}
+                {/* </div> */}
               </div>
-
               <div className="flex-1 flex items-center justify-center">
                 <AnimatePresence>
-                  {image && image.startsWith("data:image") ? (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden shadow-lg"
-                    >
-                      <Image src={image || "/placeholder.svg"} alt="Uploaded preview" fill className="object-cover" />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex flex-col items-center justify-center p-8 rounded-xl bg-slate-100 dark:bg-slate-700/50 w-full max-w-xs aspect-square"
-                    >
-                      <ImageIcon className="h-16 w-16 text-slate-400 mb-4" />
-                      <p className="text-slate-500 dark:text-slate-400 text-center">
-                        Your image preview will appear here
-                      </p>
-                    </motion.div>
-                  )}
+                  {image && image.startsWith("data:image") ?
+                    (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden shadow-lg"
+                      >
+                        <Image src={image || "/placeholder.svg"} alt="Uploaded preview" fill className="object-cover" />
+                      </motion.div>
+                    )
+                    :
+                    (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="flex flex-col items-center justify-center p-8 rounded-xl bg-slate-100 dark:bg-slate-700/50 w-full max-w-xs aspect-square"
+                      >
+                        <ImageIcon className="h-16 w-16 text-slate-400 mb-4" />
+                        <p className="text-slate-500 dark:text-slate-400 text-center">
+                          Your image preview will appear here
+                        </p>
+                      </motion.div>
+                    )}
                 </AnimatePresence>
               </div>
             </div>
+
+            <div className="flex mt-8 text-wrap">
+              {searchResult && searchResult.results.length > 0 ? (
+                <div className="flex flex-col mx-auto max-w-l w-full p-4 border-4 border-dotted">
+                  <h3 className="text-lg font-semibold">Search Results:</h3>
+                  <pre className="text-sm overflow-scroll">
+                    {/* {JSON.stringify(searchResult.results, null, 2)} */}
+                    <div className="flex flex-col gap-2">
+                      {searchResult.results.map((result: any, index: number) => (
+                        <div key={index} className="flex items-center gap-4 mt-4">
+                          <div className="w-20 h-20 rounded-lg overflow-hidden">
+                            <Image src={result.image} alt={result.productName} width={64} height={64} />
+                          </div>
+                          <div>
+                            <p className="text-base">{result.productName}</p>
+                            <p className="text-sm text-slate-600">{result.score}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </pre>
+                </div>
+              ) : searchResult && searchResult.results.length === 0 ? (
+                <div className="mt-4 p-4 bg-yellow-100 rounded-lg">
+                  <h3 className="text-lg font-semibold">No Results Found</h3>
+                  <p>Couldn't find similar products</p>
+                </div>
+              ) : null}
+            </div>
+
           </div>
         </motion.div>
 
@@ -321,7 +414,7 @@ export default function LandingPage() {
             <div className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary">
               Key Features
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold">How VisualFind Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">How VFind Works</h2>
             <p className="text-slate-600 dark:text-slate-300 mt-4 max-w-2xl mx-auto">
               Our advanced AI technology makes finding products simple and intuitive
             </p>
@@ -377,7 +470,8 @@ export default function LandingPage() {
                   className="w-full h-auto rounded-2xl shadow-2xl"
                 />
               </motion.div>
-              <div className="absolute -bottom-6 -left-6 w-full h-full bg-gradient-to-tr from-amber-400/20 to-pink-400/20 rounded-2xl -z-9"></div>
+              <div className="absolute -bottom-4 -left-4 w-full h-full bg-gradient-to-tr from-amber-400/10 to-pink-400/10 rounded-2xl -z-9">
+              </div>
             </motion.div>
 
             <motion.div variants={containerVariants} className="w-full md:w-1/2">
@@ -439,7 +533,7 @@ export default function LandingPage() {
           className="mt-20 mb-10 relative"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-blue-400 to-purple-600 rounded-3xl transform -rotate-1 scale-105 opacity-90"></div>
-          <div className="relative bg-gradient-to-r from-primary to-purple-600 text-white text-center py-16 px-8 rounded-3xl shadow-xl overflow-hidden">
+          <div className="relative bg-gradient-to-r from-[#363636] to-purple-600 text-white text-center py-16 px-8 rounded-3xl shadow-xl overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_40%)]"></div>
 
             <motion.h2
@@ -447,7 +541,7 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-3xl md:text-4xl font-bold"
+              className="text-3xl md:text-4xl font-bold font-sans"
             >
               Find Any Product in Seconds
             </motion.h2>
@@ -469,10 +563,10 @@ export default function LandingPage() {
               transition={{ delay: 0.4 }}
               className="mt-8 flex flex-wrap justify-center gap-4"
             >
-              <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
+              <Button size="lg" variant="secondary" className="bg-white text-black hover:bg-white/90">
                 Get Started for Free
               </Button>
-              <Button size="lg" variant="secondary" className="border-white text-primary hover:bg-white/10">
+              <Button size="lg" variant="secondary" className="border-white text-black hover:bg-white/10">
                 Watch Demo?
               </Button>
             </motion.div>
