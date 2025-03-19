@@ -414,6 +414,19 @@ def search_similar_images(query_image_url=None, top_k=3, base64=None):
     ]
     return get_data_form_matches
 
+
+# search for product via productId in mongodb
+def getLinkFromDB(id: str):
+    id = int(id)
+    print(id)
+    link = collection.find_one(
+        {"productId": id, "images": {"$exists": True}},
+        {"_id": 0, "images": 1},
+    )
+    link = link["images"][0].get("src")
+    print(link)
+    return link
+
     # http://assets.myntassets.com/assets/images/31973469/2024/12/14/07109c69-53d0-40af-84fc-a0965b8639261734176009937HIGHLANDERMenSlimFitOpaqueStripedCasualShirt2.jpg   test image
 
 

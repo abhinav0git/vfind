@@ -24,6 +24,11 @@ async def req_similar_prod(request: Request):
     res = scraper.search_similar_images(base64=img)
     print(res)
     if isinstance(res, list):
+        links = []
+        for item in res:
+            prodId = item.get("id")
+            link = scraper.getLinkFromDB(prodId)
+            item["image"] = link
         return {"results": res}
     else:
         return {"error": "Unexpected response format"}

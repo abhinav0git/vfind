@@ -257,16 +257,18 @@ export default function LandingPage() {
           transition={{ delay: 0.6, type: "spring", stiffness: 50 }}
           className="relative mt-12 mb-24"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/10 rounded-3xl transform rotate-1 scale-105"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/40 rounded-3xl transform rotate-1 scale-105"></div>
           <div className="relative bg-white dark:bg-slate-800 shadow-xl rounded-3xl p-8 overflow-hidden">
             <div className="flex flex-col md:flex-row gap-8">
-              <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-4">Upload Your Image</h2>
+              <div className="flex-1,1">
+                <h2 className="text-2xl font-bold mb-4">
+                  Upload Your Image
+                </h2>
                 <p className="text-slate-600 dark:text-slate-300 mb-6">
                   Drag and drop your image or paste a URL to find similar products online.
                 </p>
 
-                <div className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-colors ${isDragging ? "border-primary bg-primary/5"
+                <div className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-colors group ${isDragging ? "border-primary bg-primary/5"
                   : isUploaded ? "border-green-500 bg-green-50 dark:bg-green-900/20"
                     : "border-slate-300 dark:border-slate-600 hover:border-primary"
                   }`}
@@ -296,7 +298,9 @@ export default function LandingPage() {
                           Retry!?
                         </Button>
                         <CheckCircle2 className="h-12 w-12 text-green-500 mb-2" />
-                        <p className="text-green-600 dark:text-green-400 font-medium">Image uploaded successfully!</p>
+                        <p className="text-green-600 dark:text-green-400 font-medium">
+                          Image uploaded successfully!
+                        </p>
                       </motion.div>
                     ) : (
                       <motion.div
@@ -306,9 +310,13 @@ export default function LandingPage() {
                         exit={{ opacity: 0, scale: 0.8 }}
                         className="flex flex-col items-center cursor-pointer"
                       >
-                        <Upload className="h-12 w-12 text-slate-400 mb-2" />
-                        <p className="font-medium">Drag & drop your image here or click to browse</p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Supports JPG & PNG (max 5MB)</p>
+                        <Upload className="h-12 w-12 text-slate-400 mb-2 group-hover:-translate-y-2 group-hover:scale-[1.1] transition delay-60 duration-200 ease-in-out" />
+                        <p className="font-medium">
+                          Drag & drop your image here or click to browse
+                        </p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                          Supports JPG & PNG (max 5MB)
+                        </p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -318,26 +326,6 @@ export default function LandingPage() {
                     <Search className="h-4 w-4" /> Search
                   </Button>
                 </div>
-
-
-                {/* <div className="flex items-center gap-2 mb-6">
-                  <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">OR</span>
-                  <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
-                </div> */}
-
-                {/* <div className="flex gap-3"> */}
-                {/* <div className="flex"> */}
-                {/* <Input
-                    placeholder="Paste image URL here"
-                    className="flex-1"
-                    onChange={handleImageLinkChange}
-                    value={image || ""}
-                  /> */}
-                {/* <Button onClick={handleSearch} className="">
-                  <Search className="h-4 w-4" /> Search
-                </Button> */}
-                {/* </div> */}
               </div>
               <div className="flex-1 flex items-center justify-center">
                 <AnimatePresence>
@@ -358,36 +346,44 @@ export default function LandingPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="flex flex-col items-center justify-center p-8 rounded-xl bg-slate-100 dark:bg-slate-700/50 w-full max-w-xs aspect-square"
+                        className="flex flex-col items-center justify-center p-8 rounded-xl bg-slate-100 w-full max-w-xs aspect-square"
                       >
                         <ImageIcon className="h-16 w-16 text-slate-400 mb-4" />
                         <p className="text-slate-500 dark:text-slate-400 text-center">
                           Your image preview will appear here
                         </p>
                       </motion.div>
-                    )}
+                    )
+                  }
                 </AnimatePresence>
               </div>
             </div>
 
             <div className="flex mt-8 text-wrap">
               {searchResult && searchResult.results.length > 0 ? (
-                <div className="flex flex-col mx-auto max-w-l w-full p-4 border-4 border-dotted">
-                  <h3 className="text-lg font-semibold">Search Results:</h3>
+                <div className="flex flex-col mx-auto max-w-l w-full p-4 border-4 items-center justify-center">
+                  <h2 className="text-xl font-semibold mb-2">Search Results</h2>
                   <pre className="text-sm overflow-scroll">
-                    {/* {JSON.stringify(searchResult.results, null, 2)} */}
                     <div className="flex flex-col gap-2">
+
                       {searchResult.results.map((result: any, index: number) => (
-                        <div key={index} className="flex items-center gap-4 mt-4">
+                        // three box sized box with image and text
+                        <div key={index} className="flex-1,1,1 gap-2 m-2">
                           <div className="w-20 h-20 rounded-lg overflow-hidden">
-                            <Image src={result.image} alt={result.productName} width={64} height={64} />
+                            <Image
+                              src={result.image}
+                              alt={result.productName}
+                              width={64}
+                              height={64}
+                              className="object-cover"
+                            />
                           </div>
                           <div>
                             <p className="text-base">{result.productName}</p>
-                            <p className="text-sm text-slate-600">{result.score}</p>
                           </div>
                         </div>
                       ))}
+
                     </div>
                   </pre>
                 </div>
