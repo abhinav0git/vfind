@@ -93,32 +93,26 @@ export default function LandingPage() {
   }
 
   const handleSearch = async () => {
-
     console.dir("Searching with image:", image?.slice(0, 30))
     setSearchResult(null)
 
-    if (!image)
-      return
+    if (!image) return
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/search",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ image: image.split(",")[1] }),
-        })
+      const response = await fetch("http://127.0.0.1:8000/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: image.split(",")[1] }),
+      })
 
       const data = await response.json()
       console.dir("DATA fetch:", data?.toString())
 
-
       if (!response.ok) {
         console.log("Error searching with image:", response.statusText)
-      }
-
-      else {
+      } else {
         setSearchResult(data)
         setIsSearchSuccess(true)
         console.log("Search success!!", response.statusText)
@@ -126,9 +120,7 @@ export default function LandingPage() {
       }
 
       console.log("Search done!")
-    }
-
-    catch (error) {
+    } catch (error) {
       console.error("Error searching with image:", error)
     }
   }
@@ -260,18 +252,19 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/40 rounded-3xl transform rotate-1 scale-105"></div>
           <div className="relative bg-white dark:bg-slate-800 shadow-xl rounded-3xl p-8 overflow-hidden">
             <div className="flex flex-col md:flex-row gap-8">
-              <div className="flex-1,1">
-                <h2 className="text-2xl font-bold mb-4">
-                  Upload Your Image
-                </h2>
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold mb-4">Upload Your Image</h2>
                 <p className="text-slate-600 dark:text-slate-300 mb-6">
                   Drag and drop your image or paste a URL to find similar products online.
                 </p>
 
-                <div className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-colors group ${isDragging ? "border-primary bg-primary/5"
-                  : isUploaded ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                    : "border-slate-300 dark:border-slate-600 hover:border-primary"
-                  }`}
+                <div
+                  className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-colors group ${isDragging
+                    ? "border-primary bg-primary/5"
+                    : isUploaded
+                      ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                      : "border-slate-300 dark:border-slate-600 hover:border-primary"
+                    }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
@@ -298,9 +291,7 @@ export default function LandingPage() {
                           Retry!?
                         </Button>
                         <CheckCircle2 className="h-12 w-12 text-green-500 mb-2" />
-                        <p className="text-green-600 dark:text-green-400 font-medium">
-                          Image uploaded successfully!
-                        </p>
+                        <p className="text-green-600 dark:text-green-400 font-medium">Image uploaded successfully!</p>
                       </motion.div>
                     ) : (
                       <motion.div
@@ -311,90 +302,118 @@ export default function LandingPage() {
                         className="flex flex-col items-center cursor-pointer"
                       >
                         <Upload className="h-12 w-12 text-slate-400 mb-2 group-hover:-translate-y-2 group-hover:scale-[1.1] transition delay-60 duration-200 ease-in-out" />
-                        <p className="font-medium">
-                          Drag & drop your image here or click to browse
-                        </p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                          Supports JPG & PNG (max 5MB)
-                        </p>
+                        <p className="font-medium">Drag & drop your image here or click to browse</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Supports JPG & PNG (max 5MB)</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
                 <div className="flex mt-2 justify-center">
                   <Button onClick={handleSearch} className="items-center">
-                    <Search className="h-4 w-4" /> Search
+                    <Search className="h-4 w-4 mr-1" /> Search
                   </Button>
                 </div>
               </div>
               <div className="flex-1 flex items-center justify-center">
                 <AnimatePresence>
-                  {image && image.startsWith("data:image") ?
-                    (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden shadow-lg"
-                      >
-                        <Image src={image || "/placeholder.svg"} alt="Uploaded preview" fill className="object-cover" />
-                      </motion.div>
-                    )
-                    :
-                    (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex flex-col items-center justify-center p-8 rounded-xl bg-slate-100 w-full max-w-xs aspect-square"
-                      >
-                        <ImageIcon className="h-16 w-16 text-slate-400 mb-4" />
-                        <p className="text-slate-500 dark:text-slate-400 text-center">
-                          Your image preview will appear here
-                        </p>
-                      </motion.div>
-                    )
-                  }
+                  {image && image.startsWith("data:image") ? (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden shadow-lg"
+                    >
+                      <Image src={image || "/placeholder.svg"} alt="Uploaded preview" fill className="object-cover" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex flex-col items-center justify-center p-8 rounded-xl bg-slate-100 w-full max-w-xs aspect-square"
+                    >
+                      <ImageIcon className="h-16 w-16 text-slate-400 mb-4" />
+                      <p className="text-slate-500 dark:text-slate-400 text-center">
+                        Your image preview will appear here
+                      </p>
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </div>
             </div>
 
-            <div className="flex mt-8 text-wrap">
-              {searchResult && searchResult.results.length > 0 ? (
-                <div className="flex flex-col mx-auto max-w-l w-full p-4 border-4 items-center justify-center">
-                  <h2 className="text-xl font-semibold mb-2">Search Results</h2>
-                  <pre className="text-sm overflow-scroll">
-                    <div className="flex flex-col gap-2">
-
-                      {searchResult.results.map((result: any, index: number) => (
-                        // three box sized box with image and text
-                        <div key={index} className="flex-1,1,1 gap-2 m-2">
-                          <div className="w-20 h-20 rounded-lg overflow-hidden">
-                            <Image
-                              src={result.image}
-                              alt={result.productName}
-                              width={64}
-                              height={64}
-                              className="object-cover"
-                            />
-                          </div>
-                          <div>
-                            <p className="text-base">{result.productName}</p>
-                          </div>
-                        </div>
-                      ))}
-
+            <AnimatePresence>
+              {searchResult && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                  className="mt-8 w-full"
+                >
+                  {searchResult.results && searchResult.results.length > 0 ? (
+                    <div className="bg-white/50 backdrop-blur-sm border rounded-xl p-6 shadow-sm">
+                      <h2 className="text-xl font-semibold mb-4 text-center bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                        Search Results
+                      </h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {searchResult.results.map((result: any, index: number) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="group flex flex-col bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100"
+                          >
+                            <div className="relative h-40 w-full bg-slate-50 overflow-hidden">
+                              <Image
+                                src={result.image || "/placeholder.svg?height=160&width=160"}
+                                alt={result.productName || "Product image"}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
+                            </div>
+                            <div className="p-3">
+                              <h3 className="font-medium text-slate-800 line-clamp-2 group-hover:text-primary transition-colors">
+                                {result.productName}
+                              </h3>
+                              {result.price && (
+                                <p className="text-sm font-semibold text-primary mt-1">{result.price}</p>
+                              )}
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
-                  </pre>
-                </div>
-              ) : searchResult && searchResult.results.length === 0 ? (
-                <div className="mt-4 p-4 bg-yellow-100 rounded-lg">
-                  <h3 className="text-lg font-semibold">No Results Found</h3>
-                  <p>Couldn't find similar products</p>
-                </div>
-              ) : null}
-            </div>
-
+                  ) : searchResult && (!searchResult.results || searchResult.results.length === 0) ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-4 p-4 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg shadow-sm"
+                    >
+                      <h3 className="text-lg font-semibold flex items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 mr-2"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        No Results Found
+                      </h3>
+                      <p className="ml-7">
+                        We couldn't find similar products for your image. Try another image or adjust your search.
+                      </p>
+                    </motion.div>
+                  ) : null}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 
@@ -466,8 +485,7 @@ export default function LandingPage() {
                   className="w-full h-auto rounded-2xl shadow-2xl"
                 />
               </motion.div>
-              <div className="absolute -bottom-4 -left-4 w-full h-full bg-gradient-to-tr from-amber-400/10 to-pink-400/10 rounded-2xl -z-9">
-              </div>
+              <div className="absolute -bottom-4 -left-4 w-full h-full bg-gradient-to-tr from-amber-400/10 to-pink-400/10 rounded-2xl -z-9"></div>
             </motion.div>
 
             <motion.div variants={containerVariants} className="w-full md:w-1/2">
@@ -529,7 +547,7 @@ export default function LandingPage() {
           className="mt-20 mb-10 relative"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-blue-400 to-purple-600 rounded-3xl transform -rotate-1 scale-105 opacity-90"></div>
-          <div className="relative bg-gradient-to-r from-[#363636] to-purple-600 text-white text-center py-16 px-8 rounded-3xl shadow-xl overflow-hidden">
+          <div className="relative bg-gradient-to-r from-primary to-purple-600 text-white text-center py-16 px-8 rounded-3xl shadow-xl overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_40%)]"></div>
 
             <motion.h2
@@ -537,7 +555,7 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-3xl md:text-4xl font-bold font-sans"
+              className="text-3xl md:text-4xl font-bold"
             >
               Find Any Product in Seconds
             </motion.h2>
@@ -559,10 +577,10 @@ export default function LandingPage() {
               transition={{ delay: 0.4 }}
               className="mt-8 flex flex-wrap justify-center gap-4"
             >
-              <Button size="lg" variant="secondary" className="bg-white text-black hover:bg-white/90">
+              <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
                 Get Started for Free
               </Button>
-              <Button size="lg" variant="secondary" className="border-white text-black hover:bg-white/10">
+              <Button size="lg" variant="secondary" className="border-white text-primary hover:bg-white/10">
                 Watch Demo?
               </Button>
             </motion.div>
