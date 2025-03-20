@@ -48,3 +48,14 @@ VisualFind is a web application that allows users to search for products using i
       ```bash
       uvicorn main:app --reload
       ```
+
+## Demo
+
+<div>
+    <a href="https://www.loom.com/share/f7173cbfa4784cb3ac08b5bad9c06149">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/f7173cbfa4784cb3ac08b5bad9c06149-006c82301d6ec30d-full-play.gif">
+      <a href="https://www.loom.com/share/f7173cbfa4784cb3ac08b5bad9c06149">
+      <p>VFind - Visual Search Engine - Google Chrome - 21 March 2025 - Watch Video</p>
+    </a>
+    </a>
+  </div>

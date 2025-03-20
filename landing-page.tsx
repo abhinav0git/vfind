@@ -28,9 +28,10 @@ export default function LandingPage() {
   const [image, setImage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isUploaded, setIsUploaded] = useState(false)
-  const [isSearchSuccess, setIsSearchSuccess] = useState(false)
   const [searchResult, setSearchResult] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     console.log("Dragging over")
@@ -95,7 +96,7 @@ export default function LandingPage() {
   const handleSearch = async () => {
     console.dir("Searching with image:", image?.slice(0, 30))
     setSearchResult(null)
-
+    setIsLoading(true)
     if (!image) return
 
     try {
@@ -114,7 +115,6 @@ export default function LandingPage() {
         console.log("Error searching with image:", response.statusText)
       } else {
         setSearchResult(data)
-        setIsSearchSuccess(true)
         console.log("Search success!!", response.statusText)
         console.log("response:", data.toString())
       }
@@ -122,6 +122,9 @@ export default function LandingPage() {
       console.log("Search done!")
     } catch (error) {
       console.error("Error searching with image:", error)
+    }
+    finally {
+      setIsLoading(false)
     }
   }
 
@@ -309,8 +312,14 @@ export default function LandingPage() {
                   </AnimatePresence>
                 </div>
                 <div className="flex mt-2 justify-center">
-                  <Button onClick={handleSearch} className="items-center">
+                  <Button onClick={handleSearch} disabled={isUploaded == false || isLoading == true} className="items-center">
                     <Search className="h-4 w-4 mr-1" /> Search
+                    {isLoading && (
+                      <svg className="animate-spin ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    )}
                   </Button>
                 </div>
               </div>
@@ -321,7 +330,7 @@ export default function LandingPage() {
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden shadow-lg"
+                      className="relative w-full max-w-xs aspect-[3/4] rounded-xl overflow-hidden shadow-lg"
                     >
                       <Image src={image || "/placeholder.svg"} alt="Uploaded preview" fill className="object-cover" />
                     </motion.div>
@@ -334,7 +343,7 @@ export default function LandingPage() {
                     >
                       <ImageIcon className="h-16 w-16 text-slate-400 mb-4" />
                       <p className="text-slate-500 dark:text-slate-400 text-center">
-                        Your image preview will appear here
+                        Your image will appear here once uploaded
                       </p>
                     </motion.div>
                   )}
@@ -352,9 +361,9 @@ export default function LandingPage() {
                   className="mt-8 w-full"
                 >
                   {searchResult.results && searchResult.results.length > 0 ? (
-                    <div className="bg-white/50 backdrop-blur-sm border rounded-xl p-6 shadow-sm">
-                      <h2 className="text-xl font-semibold mb-4 text-center bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                        Search Results
+                    <div className="bg-white/50 backdrop-blur-md rounded-xl p-4">
+                      <h2 className="text-2xl font-bold mb-4 text-center text-green-600">
+                        Search Results!
                       </h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {searchResult.results.map((result: any, index: number) => (
@@ -363,18 +372,24 @@ export default function LandingPage() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1 }}
-                            className="group flex flex-col bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100"
+                            className={`group flex flex-col bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100 
+                              ${hoveredIndex !== null && hoveredIndex !== index ? 'opacity-40 blur-[4px] scale-90' : ''
+                              }`}
+                            onMouseEnter={() => setHoveredIndex(index)}
+                            onMouseLeave={() => setHoveredIndex(null)}
                           >
-                            <div className="relative h-40 w-full bg-slate-50 overflow-hidden">
+                            <div
+                              className="relative aspect-[3/4] w-full bg-slate-50 sm:text-2xl"
+                              onClick={() => window.open("https://www.myntra.com/" + result.id)}>
                               <Image
                                 src={result.image || "/placeholder.svg?height=160&width=160"}
                                 alt={result.productName || "Product image"}
+                                className="object-contain group-hover:scale-105 transition-transform duration-200 rounded-md"
                                 fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
                               />
                             </div>
                             <div className="p-3">
-                              <h3 className="font-medium text-slate-800 line-clamp-2 group-hover:text-primary transition-colors">
+                              <h3 className="font-medium text-slate-800 line-clamp-2 group-hover:font-bold group-hover:text-lg transition-all">
                                 {result.productName}
                               </h3>
                               {result.price && (
