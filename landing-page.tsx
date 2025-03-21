@@ -100,7 +100,7 @@ export default function LandingPage() {
     if (!image) return
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/search", {
+      const response = await fetch("https://vfind-317654718817.asia-south1.run.app/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
