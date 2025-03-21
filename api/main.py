@@ -9,7 +9,12 @@ app = FastAPI()
 # Allow requests from frontend (localhost:3000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://v-find.vercel.app/"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://v-find.vercel.app/",
+        "https://vfind-317654718817.asia-south1.run.app/search",
+        "https://vfind-monorepo.vercel.app/",
+    ],
     allow_credentials=True,
     allow_methods=["*"],  # all HTTP methods allowed (GET, POST, etc.)
     allow_headers=["*"],  # all headers allowed
