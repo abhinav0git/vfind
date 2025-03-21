@@ -23,10 +23,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set environment variables
-ENV PORT=8000
+ENV PORT=8080
 
 # Make port available to the world outside this container
-EXPOSE 8000
+EXPOSE 8080
 
 # Create a non-root user and switch to it for security
 RUN adduser --disabled-password --gecos '' appuser
