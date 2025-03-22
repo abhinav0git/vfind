@@ -184,14 +184,15 @@ export default function LandingPage() {
         <Button size="sm">Sign Up</Button>
       </header>
 
+      {/* Hero Section */}
       <main className="flex-1 w-full max-w-7xl px-6 pt-10 pb-20">
-        {/* Hero Section */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           className="flex flex-col md:flex-row items-center gap-12 py-8"
         >
+          {/* Hero Section Heading and Para*/}
           <motion.div variants={itemVariants} className="text-left max-w-xl">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -225,6 +226,7 @@ export default function LandingPage() {
             </motion.div>
           </motion.div>
 
+          {/* Hero Section Image*/}
           <motion.div variants={itemVariants} className="w-full md:w-1/2 relative">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -252,7 +254,7 @@ export default function LandingPage() {
           transition={{ delay: 0.6, type: "spring", stiffness: 50 }}
           className="relative mt-12 mb-24"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/40 rounded-3xl transform rotate-1 scale-105"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/20 rounded-3xl transform -bottom-4 -left-4 right-4 top-4 scale-102"></div>
           <div className="relative bg-white dark:bg-slate-800 shadow-xl rounded-3xl p-8 overflow-hidden">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
@@ -330,7 +332,7 @@ export default function LandingPage() {
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      className="relative w-full max-w-xs aspect-[3/4] rounded-xl overflow-hidden shadow-lg"
+                      className="relative w-full max-w-xs aspect-[3/4] rounded-xl overflow-hidden shadow-lg sm:aspect-square max-sm:h-60 max-sm:w-auto"
                     >
                       <Image src={image || "/placeholder.svg"} alt="Uploaded preview" fill className="object-cover" />
                     </motion.div>
@@ -379,22 +381,22 @@ export default function LandingPage() {
                             onMouseLeave={() => setHoveredIndex(null)}
                           >
                             <div
-                              className="relative aspect-[3/4] w-full bg-slate-50 sm:text-2xl"
+                              className="relative aspect-[3/4] w-full bg-slate-50 max-sm:h-60"
                               onClick={() => window.open("https://www.myntra.com/" + result.id)}>
                               <Image
                                 src={result.image || "/placeholder.svg?height=160&width=160"}
                                 alt={result.productName || "Product image"}
-                                className="object-contain group-hover:scale-105 transition-transform duration-200 rounded-md"
+                                className="object-contain max-sm:h-60 max-sm:w-auto transition-transform duration-200 rounded-md group-hover:scale-105 group-hover:cursor-pointer "
                                 fill
                               />
                             </div>
                             <div className="p-3">
-                              <h3 className="font-medium text-slate-800 line-clamp-2 group-hover:font-bold group-hover:text-lg transition-all">
+                              <h3 className="font-medium max-sm:text-xs text-slate-800 line-clamp-2 group-hover:font-bold group-hover:text-lg transition-all group-hover:underline">
                                 {result.productName}
                               </h3>
-                              {result.price && (
+                              {/* {result.price && (
                                 <p className="text-sm font-semibold text-primary mt-1">{result.price}</p>
-                              )}
+                              )} */}
                             </div>
                           </motion.div>
                         ))}
@@ -561,7 +563,7 @@ export default function LandingPage() {
           transition={{ type: "spring", stiffness: 50 }}
           className="mt-20 mb-10 relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-400 to-purple-600 rounded-3xl transform -rotate-1 scale-105 opacity-90"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#c177ff] to-[#e496ff] rounded-3xl transform rotate-1 scale-[103%] opacity-50"></div>
           <div className="relative bg-gradient-to-r from-primary to-purple-600 text-white text-center py-16 px-8 rounded-3xl shadow-xl overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_40%)]"></div>
 
