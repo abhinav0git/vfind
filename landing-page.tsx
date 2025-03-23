@@ -77,10 +77,6 @@ export default function LandingPage() {
     }
   }
 
-  const handleImageLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImage(e.target.value)
-  }
-
   const handleRetry = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log("Retry image")
     e.preventDefault()
@@ -153,7 +149,8 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 geist-mono-regular">
-      {/* bg decorative elements */}
+
+      {/* bg decorative blobs*/}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-duration-5000"></div>
         <div className="absolute top-10 right-10 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-2000 animation-duration-6000"></div>
@@ -217,10 +214,18 @@ export default function LandingPage() {
               search finds exactly what you're looking for.
             </motion.p>
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mt-8">
-              <Button size="lg" className="gap-2 group">
+              <Button
+                size="lg"
+                className="gap-2 group"
+                onClick={() => document.getElementById("upload-section")?.scrollIntoView({ behavior: "smooth", block: "center" })
+                }>
                 Get Started <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button size="lg" variant="outline">
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth", block: "center" })
+                }>
                 Learn More
               </Button>
             </motion.div>
@@ -253,6 +258,7 @@ export default function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, type: "spring", stiffness: 50 }}
           className="relative mt-12 mb-24"
+          id="upload-section"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/20 rounded-3xl transform -bottom-4 -left-4 right-4 top-4 scale-102"></div>
           <div className="relative bg-white dark:bg-slate-800 shadow-xl rounded-3xl p-8 overflow-hidden">
@@ -564,8 +570,9 @@ export default function LandingPage() {
           className="mt-20 mb-10 relative"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-[#c177ff] to-[#e496ff] rounded-3xl transform rotate-1 scale-[103%] opacity-50"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_40%)]"></div>
           <div className="relative bg-gradient-to-r from-primary to-purple-600 text-white text-center py-16 px-8 rounded-3xl shadow-xl overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_40%)]"></div>
+
 
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -594,10 +601,17 @@ export default function LandingPage() {
               transition={{ delay: 0.4 }}
               className="mt-8 flex flex-wrap justify-center gap-4"
             >
-              <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-white text-primary hover:bg-white/90">
                 Get Started for Free
               </Button>
-              <Button size="lg" variant="secondary" className="border-white text-primary hover:bg-white/10">
+              <Button
+                size="lg"
+                variant="link"
+                className="bg-white text-primary hover:bg-white/95 hover:-translate-y-1 transition-transform duration-100 ease-in-out"
+                onClick={() => window.open("https://www.loom.com/share/f7173cbfa4784cb3ac08b5bad9c06149")}>
                 Watch Demo?
               </Button>
             </motion.div>
@@ -627,7 +641,7 @@ export default function LandingPage() {
               </a>
             </div>
             <div className="text-sm text-slate-500 dark:text-slate-500">
-              © {new Date().getFullYear()} VisualFind. All rights reserved.
+              © {new Date().getFullYear()} VFind. All rights reserved.
             </div>
           </div>
         </div>
