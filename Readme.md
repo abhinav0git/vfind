@@ -64,6 +64,6 @@ VisualFind is a web application that allows users to search for products using i
 ## ToDo
 
 - [ ] browser extention
-- [ ] backend API isnt secure, API endpoint can be retreived via dev tools (as anyone could use API directly), api route must be implemented
+- [ ] backend API isnt secure, API endpoint can be retreived via dev tools (anyone could use API directly), api route must be implemented
 - [ ] add signup and login functionality (for 10 similar results or something like that)
 - [ ] full body fit recommendation
