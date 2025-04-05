@@ -13,7 +13,8 @@ VisualFind is a web application that allows users to search for products using i
 ### Backend
 
 - Python (FastAPI for backend), Pinecone (img to vector, vector search)
-- MongoDB
+- MongoDB (for storing product data)
+- PostHog (for web analytics)
 
 ## Local Setup 💻
 
@@ -59,3 +60,10 @@ VisualFind is a web application that allows users to search for products using i
     </a>
     </a>
   </div>
+
+## ToDo
+
+- [ ] browser extention
+- [ ] backend API isnt secure, API endpoint can be retreived via dev tools (as anyone could use API directly), api route must be implemented
+- [ ] add signup and login functionality (for 10 similar results or something like that)
+- [ ] full body fit recommendation

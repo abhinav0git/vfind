@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Camera, Link, Upload, Search, ArrowRight, CheckCircle2, ImageIcon } from "lucide-react"
 
-// Move the featureVariants definition outside of the main component, right before the LandingPage component definition
+// featureVariants definition
 const featureVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
@@ -112,7 +112,6 @@ export default function LandingPage() {
       } else {
         setSearchResult(data)
         console.log("Search success!!", response.statusText)
-        console.log("response:", data.toString())
       }
 
       console.log("Search done!")
@@ -148,21 +147,23 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 geist-mono-regular">
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 to-sky-100" >
 
       {/* bg decorative blobs*/}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-duration-5000"></div>
-        <div className="absolute top-10 right-10 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-2000 animation-duration-6000"></div>
+        <div className="absolute top-10 right-10 w-80 h-80 bg-[#dddbd7] rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-2000 animation-duration-6000"></div>
         <div className="absolute -bottom-40 left-40 w-96 h-96 bg-violet-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000 animation-duration-7000"></div>
-        <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-3000 animation-duration-8000"></div>
+        <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-3000 animation-duration-8000"></div>
       </div>
 
+
+      {/* Background noise */}
       {/* Header */}
-      <header className="w-full max-w-screen-2xl px-8 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff40_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
+      <header className="w-full max-w-screen-2xl px-8 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
         <div className="flex items-center gap-2">
           <div className="bg-primary rounded-full p-2">
-            <Search className="h-5 w-5 text-primary-foreground" />
+            {/* <Search className="h-5 w-5 text-primary-foreground" /> */}
           </div>
           <span className="font-bold text-xl">VFind</span>
         </div>
@@ -181,8 +182,10 @@ export default function LandingPage() {
         <Button size="sm">Sign Up</Button>
       </header>
 
-      {/* Hero Section */}
-      <main className="flex-1 w-full max-w-7xl px-6 pt-10 pb-20">
+
+      {/* Main Content */}
+      <main className="flex-1 w-full max-w-7xl px-6 pt-10 pb-10" >
+        {/* Hero Section */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -236,19 +239,19 @@ export default function LandingPage() {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4, type: "spring", stiffness: 60 }}
+              transition={{ delay: 0.4, type: "spring", stiffness: 70 }}
               className="relative z-10"
             >
               <Image
-                src="/placeholder.svg?height=200&width=250"
+                src="/image1.png"
                 alt="Product illustration"
-                width={250}
-                height={200}
+                width={100}
+                height={100}
                 className="w-full h-auto rounded-2xl shadow-2xl"
                 priority
               />
             </motion.div>
-            <div className="absolute -bottom-4 -right-4 w-full h-full bg-gradient-to-br from-primary/10 to-purple-400/10 rounded-2xl -z-9"></div>
+            <div className="absolute -bottom-4 -right-4 w-full h-full bg-gradient-to-br from-primary/10 to-purple-400/10 rounded-2xl -z-9 opacity-60"></div>
           </motion.div>
         </motion.div>
 
@@ -257,7 +260,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, type: "spring", stiffness: 50 }}
-          className="relative mt-12 mb-24"
+          className="relative mt-20 mb-24"
           id="upload-section"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/20 rounded-3xl transform -bottom-4 -left-4 right-4 top-4 scale-102"></div>
@@ -501,14 +504,17 @@ export default function LandingPage() {
                 className="relative z-10"
               >
                 <Image
-                  src="/placeholder.svg?height=400&width=500"
-                  alt="Chrome extension illustration"
-                  width={500}
-                  height={400}
-                  className="w-full h-auto rounded-2xl shadow-2xl"
+                  src="/image2.png"
+                  alt="chrome extension illustration"
+                  width={50}
+                  height={50}
+                  className="w-full h-auto rounded-2xl -skew-x-2 shadow-xl"
                 />
               </motion.div>
-              <div className="absolute -bottom-4 -left-4 w-full h-full bg-gradient-to-tr from-amber-400/10 to-pink-400/10 rounded-2xl -z-9"></div>
+              <div
+                className="absolute -bottom-2 -left-2 w-full h-full bg-gradient-to-tr from-amber-400/10 to-pink-400/10 rounded-2xl -z-9 -skew-x-2 shadow-2xl">
+
+              </div>
             </motion.div>
 
             <motion.div variants={containerVariants} className="w-full md:w-1/2">
@@ -555,6 +561,9 @@ export default function LandingPage() {
                     className="rounded-full"
                   />
                   Add to Chrome
+                  <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-slate-800 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                    Coming Soon
+                  </span>
                 </Button>
               </motion.div>
             </motion.div>
@@ -620,23 +629,37 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
+      < footer className="w-full bg-cyan-50 border-t border-slate-200 py-12" >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
               <div className="bg-primary rounded-full p-2">
-                <Search className="h-5 w-5 text-primary-foreground" />
+                {/* <Search className="h-5 w-5 text-primary-foreground" /> */}
               </div>
               <span className="font-bold text-xl">VisualFind</span>
             </div>
             <div className="flex gap-8">
-              <a href="#" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+              <a
+                href="#"
+                className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors relative group"
+                onClick={(e) => e.preventDefault()}
+              >
                 Privacy
+                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-slate-800 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                  wip!
+                </span>
               </a>
-              <a href="#" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+              <a
+                href="#"
+                className="text-sm text-slate-600 hover:text-primary transition-colors relative group"
+                onClick={(e) => e.preventDefault()}
+              >
                 Terms
+                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-slate-800 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                  wip!
+                </span>
               </a>
-              <a href="#" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+              <a href="mailto:abhinav07@gmail.com" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
                 Contact
               </a>
             </div>
@@ -645,7 +668,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </footer>
+      </footer >
     </div>
   )
 }
