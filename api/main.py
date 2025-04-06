@@ -11,10 +11,11 @@ origins_updated = [
     "https://v-find.vercel.app",
     "http://localhost:3000",
 ]
-# Allow requests from frontend (localhost:3000)
+# Allow requests from frontend
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins_updated,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],  # all HTTP methods allowed (GET, POST, etc.)
     allow_headers=["*"],  # all headers allowed
