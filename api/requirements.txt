@@ -26,3 +26,4 @@ transformers
 torch
 pillow
 python-dotenv
+accelerate

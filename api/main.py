@@ -15,7 +15,7 @@ origins_updated = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins_updated,
     allow_credentials=True,
     allow_methods=["*"],  # all HTTP methods allowed (GET, POST, etc.)
     allow_headers=["*"],  # all headers allowed
