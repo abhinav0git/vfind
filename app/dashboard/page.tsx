@@ -18,7 +18,7 @@ export default function DashboardPage() {
       alert("Logout failed: " + error.message);
       toast.error("Logout failed :" + error.message);
     } finally {
-      toast.success("See you Soon!", {
+      toast.success("Logged out!", {
         duration: 2000
       });
     }

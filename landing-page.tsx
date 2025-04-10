@@ -173,12 +173,13 @@ export default function LandingPage() {
       {/* Background noise */}
       {/* Header */}
       <header className="w-full max-w-screen-2xl px-8 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
-        <div className="flex items-center gap-2">
+        <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <div className="bg-primary rounded-full p-2">
-            {/* <Search className="h-5 w-5 text-primary-foreground" /> */}
           </div>
-          <span className="font-bold text-xl">VFind</span>
-        </div>
+          <span className="font-bold text-xl">
+            VFind
+          </span>
+        </motion.div>
 
         <nav className="hidden md:flex gap-6 space-mono-regular">
           <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
