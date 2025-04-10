@@ -1,12 +1,15 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useRef } from "react"
+import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Camera, Link, Upload, Search, ArrowRight, CheckCircle2, ImageIcon } from "lucide-react"
+import { useAuth } from "./lib/authContext";
+import toast from "react-hot-toast";
+
 
 // featureVariants definition
 const featureVariants = {
@@ -24,7 +27,9 @@ const featureVariants = {
 }
 
 export default function LandingPage() {
-  // Remove the featureVariants definition from here since we moved it outside
+
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const [image, setImage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isUploaded, setIsUploaded] = useState(false)
@@ -56,6 +61,7 @@ export default function LandingPage() {
         if (event.target) {
           setImage(event.target.result as string)
           setIsUploaded(true)
+          toast.success("Image Uploaded!")
         }
       }
       reader.readAsDataURL(file)
@@ -71,6 +77,7 @@ export default function LandingPage() {
         if (event.target) {
           setImage(event.target.result as string)
           setIsUploaded(true)
+          toast.success("Image Uploaded!")
         }
       }
       reader.readAsDataURL(file)
@@ -90,38 +97,43 @@ export default function LandingPage() {
   }
 
   const handleSearch = async () => {
-    console.dir("Searching with image:", image?.slice(0, 30))
-    setSearchResult(null)
-    setIsLoading(true)
-    if (!image) return
+    console.dir("Searching with image:", image?.slice(0, 30));
+    setSearchResult(null);
+    setIsLoading(true);
+
+    if (!image) return;
 
     try {
-      const response = await fetch("https://vfind-317654718817.asia-south1.run.app/search", {
+      const promise = fetch("https://vfind-317654718817.asia-south1.run.app/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ image: image.split(",")[1] }),
-      })
+      });
 
-      const data = await response.json()
-      console.dir("DATA fetch:", data?.toString())
+      toast.promise(promise, {
+        loading: "Searching...",
+        success: "Search successful!",
+        error: "Search failed!",
+      });
+
+      const response = await promise;
+      const data = await response.json();
 
       if (!response.ok) {
-        console.log("Error searching with image:", response.statusText)
+        console.error("Error searching with image:", response.statusText);
       } else {
-        setSearchResult(data)
-        console.log("Search success!!", response.statusText)
+        setSearchResult(data);
+        console.log("Search success!!", response.statusText);
       }
-
-      console.log("Search done!")
     } catch (error) {
-      console.error("Error searching with image:", error)
+      console.error("Error searching with image:", error);
+    } finally {
+      setIsLoading(false);
     }
-    finally {
-      setIsLoading(false)
-    }
-  }
+  };
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -179,7 +191,14 @@ export default function LandingPage() {
             Extension
           </a>
         </nav>
-        <Button size="sm">Sign Up</Button>
+        <Button
+          size="sm"
+          onClick={() => {
+            router.push(user ? "/dashboard" : "/auth");
+          }}
+        >
+          {user ? "Dashboard" : "Sign Up"}
+        </Button>
       </header>
 
 
@@ -324,14 +343,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex mt-2 justify-center">
                   <Button onClick={handleSearch} disabled={isUploaded == false || isLoading == true} className="items-center">
-                    <Search className="h-4 w-4 mr-1" /> Search
-                    {isLoading && (
-                      <svg className="animate-spin ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                    )}
-                  </Button>
+                    <Search className="h-4 w-4 mr-1" /> Search </Button>
                 </div>
               </div>
               <div className="flex-1 flex items-center justify-center">
