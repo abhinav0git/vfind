@@ -97,14 +97,15 @@ export default function LandingPage() {
   }
 
   const handleSearch = async () => {
-    console.dir("Searching with image:", image?.slice(0, 30));
+    // console.dir("Searching with image:", image?.slice(0, 30));
+
     setSearchResult(null);
     setIsLoading(true);
 
     if (!image) return;
 
     try {
-      const promise = fetch("https://vfind-317654718817.asia-south1.run.app/search", {
+      const promise = fetch("/api/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
