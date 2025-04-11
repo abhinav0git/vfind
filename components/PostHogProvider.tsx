@@ -8,7 +8,6 @@ import { usePathname, useSearchParams } from "next/navigation"
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-
     if (posthogKey) {
       posthog.init(posthogKey, {
         api_host: "/ingest",

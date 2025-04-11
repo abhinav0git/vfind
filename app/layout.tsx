@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { PostHogProvider } from '../components/PostHogProvider'
+import { AuthProvider } from '../lib/authContext'
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'VFind - Visual Search Engine',
@@ -14,13 +16,12 @@ export default function RootLayout({ children }:
     <html lang="en">
       <body>
         <PostHogProvider>
-          <div className="relative">
-            {/* <script
-              crossOrigin="anonymous"
-              src="//unpkg.com/react-scan/dist/auto.global.js"
-            /> */}
-            <div className="relative z-10">{children}</div>
-          </div>
+          <AuthProvider>
+            <Toaster position="bottom-right" reverseOrder={false} />
+            <div className="relative">
+              <div className="relative z-10">{children}</div>
+            </div>
+          </AuthProvider>
         </PostHogProvider>
       </body>
     </html>
