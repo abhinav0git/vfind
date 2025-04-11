@@ -64,8 +64,8 @@ VisualFind is a web application that allows users to search for products using i
 ## ToDo
 
 - [x] add signup and login functionality
-- [ ] backend API isnt secure, API endpoint can be retreived via dev tools (anyone could use API directly), api route must be implemented
+- [x] backend API isnt secure, API endpoint can be retreived via dev tools (anyone could use API directly), api route must be implemented
 - [ ] 10 similar results or something like that (if user is signedup)
 - [ ] full body fit recommendation (if user is signedup)
-- [ ] "not so accurate but ok-ish" vton for uploaded image or any other similar image from result (if user is signedup)
+- [ ] "not so accurate but ok-ish" vton (virtual try-on) for uploaded product or any other "similar" product from result (if user is signedup)
 - [ ] browser extention (if user is signedup)(only top 3 similarsearch result)
