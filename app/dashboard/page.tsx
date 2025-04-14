@@ -44,9 +44,16 @@ export default function DashboardPage() {
 
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
         <h1 className="text-xl font-bold mb-4 justify-center">Welcome, {user?.email}</h1>
+        <h3>more cool stuff on the way!</h3>
+        <p className="text-md">
+          <li>chrome extension</li>
+          <li>virtual try on</li>
+          <li>10 similar products insted of 3</li>
+        </p>
         <Button
           onClick={handleLogout}
           variant="destructive"
+          className="mt-4"
         >
           Logout
         </Button>

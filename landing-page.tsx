@@ -290,7 +290,7 @@ export default function LandingPage() {
               <div className="flex-1">
                 <h2 className="text-2xl font-bold mb-4">Upload Your Image</h2>
                 <p className="text-slate-600 dark:text-slate-300 mb-6">
-                  Drag and drop your image or paste a URL to find similar products online.
+                  Drag and drop your image to find similar products online.
                 </p>
 
                 <div
@@ -643,16 +643,16 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      < footer className="w-full bg-cyan-50 border-t border-slate-200 py-12" >
+      < footer className="w-full bg-cyan-50 border-t border-slate-200 py-8 border-t-transparent rounded-t-xl" >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
               <div className="bg-primary rounded-full p-2">
                 {/* <Search className="h-5 w-5 text-primary-foreground" /> */}
               </div>
-              <span className="font-bold text-xl">VisualFind</span>
+              <span className="font-bold text-xl">VFind</span>
             </div>
-            <div className="flex gap-8">
+            <div className="flex gap-20 md:gap-8">
               <a
                 href="#"
                 className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors relative group"
