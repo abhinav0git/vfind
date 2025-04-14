@@ -5,6 +5,7 @@ import ProtectedRoute from "../../components/ProtectedRoute";
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { House } from 'lucide-react';
 
 
 export default function DashboardPage() {
@@ -39,7 +40,9 @@ export default function DashboardPage() {
           size="sm"
           onClick={() => router.push("/")}
         >
-          Home</Button>
+          <House />
+          <span className="md:inline hidden"> Home </span>
+        </Button>
       </header>
 
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
