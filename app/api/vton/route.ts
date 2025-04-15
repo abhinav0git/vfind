@@ -3,12 +3,15 @@ import { vtonProcessor } from "@/lib/vtonProcessor";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { personImage, clothImage } = body;
+    const { personImage, clothImage } = await req.json();
+
+    if (!personImage || !clothImage) {
+      return NextResponse.json({ error: "Missing images" }, { status: 400 });
+    }
 
     const result = await vtonProcessor(personImage, clothImage);
-    console.log("result from route");
-    return NextResponse.json({ success: true, result });
+
+    return NextResponse.json({ result });
   } catch (error: any) {
     console.error("🔥 VTON route error:", error);
     return NextResponse.json(
