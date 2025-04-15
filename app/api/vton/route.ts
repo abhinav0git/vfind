@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { vtonProcessor } from "@/lib/vtonProcessor";
+import { vtonProcessor } from "../../../lib/vtonProcessor";
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,10 +7,10 @@ export async function POST(req: NextRequest) {
     const { personImage, clothImage } = body;
 
     const result = await vtonProcessor(personImage, clothImage);
-    console.log("result from route");
+
     return NextResponse.json({ success: true, result });
   } catch (error: any) {
-    console.error("🔥 VTON route error:", error);
+    console.error("VTON route error:", error);
     return NextResponse.json(
       { error: "Internal Server Error", detail: error?.message },
       { status: 500 }
