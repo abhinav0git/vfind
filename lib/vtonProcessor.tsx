@@ -1,10 +1,12 @@
 import { GoogleGenAI, Modality } from "@google/genai";
+import { console } from "inspector";
 
 export async function vtonProcessor(personImage: string, clothImage: string) {
   console.log("personImage", personImage);
   console.log("clothImage", clothImage);
   const apiKey = process.env.GOOGLE_API_KEY as string;
   const genAI = new GoogleGenAI({ apiKey });
+  console.log("api", "t" + apiKey + "t");
 
   const prompt = "Generate a photorealistic image of the person wearing the clothing item.";
 
