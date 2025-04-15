@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 console.log("firebase config fired");
-console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
