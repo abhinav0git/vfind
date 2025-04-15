@@ -60,6 +60,7 @@ export default function DashboardPage() {
     console.log("handleGenerate")
 
     try {
+      console.log("sending images to server...")
       const response = await fetch("api/vton", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -67,7 +68,7 @@ export default function DashboardPage() {
       })
 
       const data = await response.json()
-      console.log("data error frontend", data)
+      console.log("data from server sucessfully generated")
 
       if (response.ok) {
         setResultImage(`data:image/jpeg;base64,${data.result.data}`)
