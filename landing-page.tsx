@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Camera, Link, Upload, Search, ArrowRight, CheckCircle2, ImageIcon } from "lucide-react"
+import { Camera, Link, Upload, Search, ArrowRight, CheckCircle2, ImageIcon, LayoutDashboard, LogIn } from "lucide-react"
 import { useAuth } from "./lib/authContext";
 import toast from "react-hot-toast";
 
@@ -173,7 +173,7 @@ export default function LandingPage() {
 
       {/* Background noise */}
       {/* Header */}
-      <header className="w-full max-w-screen-2xl px-8 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
+      <header className="w-full max-w-screen-2xl px-10 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
         <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <div className="bg-primary rounded-full p-2">
           </div>
@@ -199,7 +199,10 @@ export default function LandingPage() {
             router.push(user ? "/dashboard" : "/auth");
           }}
         >
-          {user ? "Dashboard" : "Sign Up"}
+          {user ? (<LayoutDashboard color="#ffffff" />) : (<LogIn color="#ffffff" />)}
+          <span className="md:inline hidden">
+            {user ? "Dashboard" : "Sign Up"}
+          </span>
         </Button>
       </header>
 
