@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
     try {
       console.log("sending images to server...")
-      const response = await fetch("api/vton", {
+      const response = await fetch("/api/vton", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ personImage, clothImage }),
