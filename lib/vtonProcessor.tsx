@@ -10,6 +10,8 @@ export async function vtonProcessor(personImage: string, clothImage: string) {
 
   const prompt = "Generate a photorealistic image of the person wearing the clothing item.";
 
+  // const prompt = "You are a virtual try-on assistant. The first image is a person with a plain background. Replace the background with a solid white or light gray color. Then, using the second image (a clothing item), generate a new image of the person wearing that clothing item. Make sure the new clothing fits naturally on the person, follows realistic folds, lighting, and alignment. Do not change the person's face, pose, or body shape. Keep the result clean, sharp, and as photorealistic as possible."
+
   const contents = [
     { text: prompt },
     {
@@ -27,6 +29,7 @@ export async function vtonProcessor(personImage: string, clothImage: string) {
   ];
 
   try {
+    console.log("vtonprocessor fired");
     const response = await genAI.models.generateContent({
       model: "gemini-2.0-flash-exp-image-generation",
       contents: contents,
@@ -35,11 +38,14 @@ export async function vtonProcessor(personImage: string, clothImage: string) {
       },
     });
 
-    const candidates = response.candidates;
+    const candidates = await response.candidates;
+
 
     if (!candidates || !candidates.length || !candidates[0].content) {
       throw new Error("No valid content returned from Gemini model.");
     }
+
+    console.log(candidates);
 
     for (const part of response.candidates[0].content.parts) {
       if (part.inlineData) {

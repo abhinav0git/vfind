@@ -71,10 +71,10 @@ export default function DashboardPage() {
 
       const data = await response.json()
       console.log("data from server sucessfully generated")
+      console.dir(data)
 
       if (response.ok) {
         setResultImage(`data:image/jpeg;base64,${data.result.data}`)
-        // console.log("data.result.data", data.result.data)
         toast.success("Image generated successfully!", {
           duration: 3000,
         })
