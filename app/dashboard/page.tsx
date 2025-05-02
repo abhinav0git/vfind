@@ -7,8 +7,8 @@ import ProtectedRoute from "../../components/ProtectedRoute"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
-import { HomeIcon as House, LogOut, Upload, Wand2 } from "lucide-react"
-import { useState, useRef } from "react"
+import { HomeIcon as House, LogOut, Upload } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { GoogleGenAI, Modality } from "@google/genai";
 
@@ -91,62 +91,6 @@ export default function DashboardPage() {
     }
   }
 
-  async function vtonprocessor(personImage: string, clothImage: string) {
-
-    const apiKey = process.env.GOOGLE_API_KEY as string;
-    const genAI = new GoogleGenAI({ apiKey });
-    console.log("api", "t" + apiKey + "t");
-
-    const prompt = "Generate a photorealistic image of the person wearing the clothing item.";
-
-    const contents = [
-      { text: prompt },
-      {
-        inlineData: {
-          mimeType: "image/jpeg",
-          data: personImage.split(",")[1], // remove base64 header
-        },
-      },
-      {
-        inlineData: {
-          mimeType: "image/jpeg",
-          data: clothImage.split(",")[1],
-        },
-      },
-    ];
-
-    try {
-      const response = await genAI.models.generateContent({
-        model: "gemini-2.0-flash-exp-image-generation",
-        contents: contents,
-        config: {
-          responseModalities: [Modality.TEXT, Modality.IMAGE],
-        },
-      });
-
-      const candidates = response.candidates;
-
-      if (!candidates || !candidates.length || !candidates[0].content) {
-        throw new Error("No valid content returned from Gemini model.");
-      }
-
-      for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData) {
-          return {
-            mimeType: part.inlineData.mimeType,
-            data: part.inlineData.data,
-          };
-        }
-      }
-
-      throw new Error("No image was returned in the response.");
-    }
-    catch (error: any) {
-      console.error("VTON Error:", error);
-      throw new Error(`Failed to generate virtual try-on image: ${error.toString()}`);
-    }
-  }
-
   const triggerFileInput = (type: "person" | "cloth") => {
     if (type === "person" && personInputRef.current) {
       personInputRef.current.click()
@@ -155,14 +99,47 @@ export default function DashboardPage() {
     }
   }
 
+  useEffect(() => {
+    const storedImageUrl = localStorage.getItem("vtonInputImage");
+    if (storedImageUrl) {
+      fetch(storedImageUrl)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], "vton-image.jpg", { type: blob.type });
+
+          // set image preview
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64 = reader.result as string;
+            setClothImage(base64);
+          };
+          reader.readAsDataURL(file);
+
+          // set file to input
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          if (personInputRef.current) {
+            personInputRef.current.files = dataTransfer.files;
+          }
+
+          // clean up required?
+          //localStorage.removeItem("vtonInputImage");
+        })
+        .catch(err => {
+          console.error("Failed to fetch image for VTON:", err);
+        });
+    }
+  }, []);
+
+
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-violet-50">
+      <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-purple-50 to-violet-50">
         <motion.header
-          initial={{ y: -100, opacity: 0 }}
+          initial={{ y: -40, opacity: 0.5 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          className="w-full px-10 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,rgba(250,245,255,0.8)_1px)] bg-[size:4px_4px] backdrop-blur-[4px] border-b border-purple-100"
+          className="w-full max-w-screen-2xl px-[8%] py-[1.25%] fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,rgba(250,245,255,0.6)_1px)] bg-[size:4px_4px] backdrop-blur-[4px] border-b border-purple-100"
         >
           <motion.div
             className="flex items-center gap-2"
@@ -176,14 +153,14 @@ export default function DashboardPage() {
             </span>
           </motion.div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 space-mono-regular">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 size="sm"
                 onClick={() => router.push("/")}
                 className="bg-purple-100 text-purple-700 hover:bg-purple-200"
               >
-                <House className="mr-2 h-4 w-4" />
+                <House className="h-4 w-4" />
                 <span className="md:inline hidden">Home</span>
               </Button>
             </motion.div>
@@ -194,7 +171,7 @@ export default function DashboardPage() {
                 variant="destructive"
                 className="bg-violet-600 hover:bg-violet-700"
               >
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="h-4 w-4" />
                 Logout
               </Button>
             </motion.div>
@@ -220,7 +197,7 @@ export default function DashboardPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                Welcome, {user?.email}
+                Welcome, {user?.email?.split("@")[0].toUpperCase()}
               </motion.p>
               <motion.h1
                 className="space-mono-bold text-2xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 to-violet-800 bg-clip-text text-transparent mb-4 pb-2"
@@ -234,7 +211,7 @@ export default function DashboardPage() {
             </motion.div>
 
             <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 md:p-8 mb-8"
+              className="bg-white rounded-xl shadow-xl px-4 py-3 md:p-8 mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
@@ -323,26 +300,29 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.9 }}
               >
-                <motion.button
-                  onClick={handleGenerate}
-                  disabled={loading || !personImage || !clothImage}
-                  className={`px-8 py-3 rounded-full font-medium text-white shadow-lg ${loading || !personImage || !clothImage ? "bg-gray-400" : "bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700"} transition-all`}
+                <motion.div
+                  className="rounded-lg"
                   whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.5)" }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {loading ? (
-                    <motion.div className="flex items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                      <motion.div
-                        className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"
-                        animate={{ rotate: 360 }}
-                        transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1, ease: "linear" }}
-                      />
-                      Generating...
-                    </motion.div>
-                  ) : (
-                    <span>Generate Try-On</span>
-                  )}
-                </motion.button>
+                  <Button
+                    onClick={handleGenerate}
+                    disabled={loading || !personImage || !clothImage}
+                  >
+                    {loading ? (
+                      <motion.div className="flex items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <motion.div
+                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"
+                          animate={{ rotate: 360 }}
+                          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1, ease: "linear" }}
+                        />
+                        Generating
+                      </motion.div>
+                    ) : (
+                      <span>Generate</span>
+                    )}
+                  </Button>
+                </motion.div>
               </motion.div>
             </motion.div>
 
@@ -383,12 +363,12 @@ export default function DashboardPage() {
         </main>
 
         <motion.footer
-          className="py-8 text-center"
+          className="py-8 text-center bg-slate-100"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          <motion.h3 className="text-lg font-medium text-purple-800 mb-2" whileHover={{ scale: 1.05 }}>
+          <motion.h3 className="text-lg font-medium text-purple-800 mb-2 " whileHover={{ scale: 1.05 }}>
             More cool stuff on the way!
           </motion.h3>
           <motion.p
@@ -397,7 +377,7 @@ export default function DashboardPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
           >
-            Chrome extension, 10 similar products instead of 3, select any similar product for VTon and more...
+            - Chrome extension; - 10 similar products instead of 3; - select any similar product for VTon; and more...
           </motion.p>
         </motion.footer>
       </div>

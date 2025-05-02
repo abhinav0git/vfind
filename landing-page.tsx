@@ -2,16 +2,14 @@
 
 import type React from "react"
 import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Camera, Link, Upload, Search, ArrowRight, CheckCircle2, ImageIcon, LayoutDashboard, LogIn } from "lucide-react"
+import { Camera, Upload, Search, ArrowRight, CheckCircle2, ImageIcon, LayoutDashboard, LogIn, Wand2Icon, CircleXIcon, PlusCircleIcon, RocketIcon } from "lucide-react"
 import { useAuth } from "./lib/authContext";
-import toast from "react-hot-toast";
+import toast, { ToastBar } from "react-hot-toast";
 
-
-// featureVariants definition
 const featureVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
@@ -126,7 +124,13 @@ export default function LandingPage() {
         console.error("Error searching with image:", response.statusText);
       } else {
         setSearchResult(data);
+
+        data.results.map((result: any) => {
+          console.log("Result:", result.productName, result.image);
+        });
+
         console.log("Search success!!", response.statusText);
+
       }
     } catch (error) {
       console.error("Error searching with image:", error);
@@ -136,6 +140,7 @@ export default function LandingPage() {
   };
 
 
+  //varients motion
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -173,7 +178,7 @@ export default function LandingPage() {
 
       {/* Background noise */}
       {/* Header */}
-      <header className="w-full max-w-screen-2xl px-10 py-4 fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
+      <header className="w-full max-w-screen-2xl px-[10%] py-[1.25%] fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
         <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <div className="bg-primary rounded-full p-2">
           </div>
@@ -183,27 +188,59 @@ export default function LandingPage() {
         </motion.div>
 
         <nav className="hidden md:flex gap-6 space-mono-regular">
-          <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
+          <button
+            onClick={() =>
+              document.getElementById("features")?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              })
+            }
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
             Features
-          </a>
-          <a href="#how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
+          </button>
+
+          <button
+            onClick={() =>
+              document.getElementById("how-it-works")?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              })
+            }
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
             How it works
-          </a>
-          <a href="#extension" className="text-sm font-medium hover:text-primary transition-colors">
+          </button>
+
+          <button
+            onClick={() =>
+              document.getElementById("extension")?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              })
+            }
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
             Extension
-          </a>
+          </button>
         </nav>
-        <Button
-          size="sm"
-          onClick={() => {
-            router.push(user ? "/dashboard" : "/auth");
-          }}
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          {user ? (<LayoutDashboard color="#ffffff" />) : (<LogIn color="#ffffff" />)}
-          <span className="md:inline hidden">
-            {user ? "Dashboard" : "Sign Up"}
-          </span>
-        </Button>
+          <Button
+            size="sm"
+            onClick={() => {
+              router.push(user ? "/dashboard" : "/auth");
+            }}
+          >
+            {user ? (<LayoutDashboard color="#ffffff" />) : (<LogIn color="#ffffff" />)}
+            <span className="md:inline hidden space-mono-regular">
+              {user ? "Dashboard" : "Sign Up"}
+            </span>
+          </Button>
+        </motion.div>
       </header>
 
 
@@ -237,7 +274,7 @@ export default function LandingPage() {
               with an Image
             </motion.h1>
             <motion.p variants={itemVariants} className="text-lg text-slate-600 dark:text-slate-300 mt-6">
-              Upload an image or paste an image link to discover matching products instantly. Our AI-powered visual
+              Upload an image to discover matching products instantly. Our AI-powered visual
               search finds exactly what you're looking for.
             </motion.p>
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mt-8">
@@ -287,11 +324,15 @@ export default function LandingPage() {
           className="relative mt-20 mb-24"
           id="upload-section"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/20 rounded-3xl transform -bottom-4 -left-4 right-4 top-4 scale-102"></div>
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/20 rounded-3xl transform -bottom-4 -left-4 right-4 top-4 scale-102">
+          </div>
           <div className="relative bg-white dark:bg-slate-800 shadow-xl rounded-3xl p-8 overflow-hidden">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-4">Upload Your Image</h2>
+                <h2 className="text-2xl font-bold mb-4">
+                  Upload Your Image
+                </h2>
                 <p className="text-slate-600 dark:text-slate-300 mb-6">
                   Drag and drop your image to find similar products online.
                 </p>
@@ -318,19 +359,22 @@ export default function LandingPage() {
 
                   <AnimatePresence mode="wait">
                     {isUploaded ? (
-                      <motion.div
-                        key="uploaded"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="flex flex-col items-center"
-                      >
-                        <Button size="sm" variant="outline" onClick={handleRetry} className="mb-2 bg-red-400">
+                      <>
+                        <motion.div
+                          key="uploaded"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          className="flex flex-col items-center"
+                        >
+                          <CheckCircle2 className="h-12 w-12 text-green-500 mb-2" />
+                          <p className="text-green-600 dark:text-green-400 font-medium">Image uploaded successfully!</p>
+                        </motion.div>
+                        <Button size="sm" variant="outline" onClick={handleRetry} className="mt-2 bg-red-400">
+                          <CircleXIcon className="h-4 w-4 animate-pulse" />
                           Retry!?
                         </Button>
-                        <CheckCircle2 className="h-12 w-12 text-green-500 mb-2" />
-                        <p className="text-green-600 dark:text-green-400 font-medium">Image uploaded successfully!</p>
-                      </motion.div>
+                      </>
                     ) : (
                       <motion.div
                         key="upload-prompt"
@@ -348,10 +392,12 @@ export default function LandingPage() {
                 </div>
                 <div className="flex mt-2 justify-center">
                   <Button onClick={handleSearch} disabled={isUploaded == false || isLoading == true} className="items-center">
-                    <Search className="h-4 w-4 mr-1" /> Search </Button>
+                    <Search className="h-4 w-4" /> Search </Button>
                 </div>
               </div>
               <div className="flex-1 flex items-center justify-center">
+
+                {/* Input image Preview */}
                 <AnimatePresence>
                   {image && image.startsWith("data:image") ? (
                     <motion.div
@@ -379,6 +425,7 @@ export default function LandingPage() {
               </div>
             </div>
 
+            {/* Search Results */}
             <AnimatePresence>
               {searchResult && (
                 <motion.div
@@ -390,8 +437,8 @@ export default function LandingPage() {
                 >
                   {searchResult.results && searchResult.results.length > 0 ? (
                     <div className="bg-white/50 backdrop-blur-md rounded-xl p-4">
-                      <h2 className="text-2xl font-bold mb-4 text-center text-green-600">
-                        Search Results!
+                      <h2 className="text-2xl font-bold mb-6 text-center text-sky-500">
+                        Search Results
                       </h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {searchResult.results.map((result: any, index: number) => (
@@ -406,16 +453,29 @@ export default function LandingPage() {
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
                           >
-                            <div
-                              className="relative aspect-[3/4] w-full bg-slate-50 max-sm:h-60"
-                              onClick={() => window.open("https://www.myntra.com/" + result.id)}>
+                            <div className="relative aspect-[3/4] w-full bg-slate-50 max-sm:h-60 group">
                               <Image
                                 src={result.image || "/placeholder.svg?height=160&width=160"}
                                 alt={result.productName || "Product image"}
-                                className="object-contain max-sm:h-60 max-sm:w-auto transition-transform duration-200 rounded-md group-hover:scale-105 group-hover:cursor-pointer "
+                                className="object-contain max-sm:h-60 max-sm:w-auto transition-transform duration-200 rounded-md group-hover:scale-105 group-hover:cursor-pointer"
+                                onClick={() => window.open("https://www.myntra.com/" + result.id)}
                                 fill
                               />
+
+                              <button
+                                className="hidden group-hover:flex items-center justify-center absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-1.5 md:px-4 md:py-2 rounded-md bg-primary text-white text-xs md:text-sm font-medium shadow-md hover:bg-blue-400 hover:shadow-lg transition-all"
+                                onClick={(e) => {
+                                  localStorage.removeItem("vtonInputImage");
+                                  e.preventDefault();
+                                  localStorage.setItem("vtonInputImage", result.image);
+                                  console.log("image selected for vton", result.productName, result.image);
+                                  router.push("/dashboard");
+                                }}
+                              >
+                                Try V-Ton
+                              </button>
                             </div>
+
                             <div className="p-3">
                               <h3 className="font-medium max-sm:text-xs text-slate-800 line-clamp-2 group-hover:font-bold group-hover:text-lg transition-all group-hover:underline">
                                 {result.productName}
@@ -472,7 +532,9 @@ export default function LandingPage() {
             <div className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary">
               Key Features
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold">How VFind Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">
+              Discover the Power of Visual Search
+            </h2>
             <p className="text-slate-600 dark:text-slate-300 mt-4 max-w-2xl mx-auto">
               Our advanced AI technology makes finding products simple and intuitive
             </p>
@@ -480,23 +542,23 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard
-              icon={<Camera className="h-8 w-8" />}
+              icon={<Camera className="h-8 w-8 group-hover:rotate-x-2 transition-transform" />}
               title="Upload Images"
               description="Simply upload a photo to find similar products online from thousands of retailers."
               color="from-blue-500 to-cyan-400"
               index={0}
             />
             <FeatureCard
-              icon={<Link className="h-8 w-8" />}
-              title="Use Image Links"
-              description="Paste an image URL from any website to discover where to buy the exact product or similar items."
+              icon={<Wand2Icon className="h-8 w-8" />}
+              title="V-Ton"
+              description="Use search result product and try it on your own image. Just click on the product image and see the magic!"
               color="from-purple-500 to-pink-400"
               index={1}
             />
             <FeatureCard
               icon={<Search className="h-8 w-8" />}
-              title="AI-Powered Search"
-              description="Our advanced visual recognition technology identifies products with incredible accuracy."
+              title="Chrome Extension"
+              description="Install our Chrome extension to search for products seamlessly while browsing any website."
               color="from-amber-500 to-orange-400"
               index={2}
             />
@@ -525,13 +587,10 @@ export default function LandingPage() {
                   alt="chrome extension illustration"
                   width={50}
                   height={50}
-                  className="w-full h-auto rounded-2xl -skew-x-2 shadow-xl"
+                  className="w-full h-auto rounded-2xl shadow-xl"
                 />
               </motion.div>
-              <div
-                className="absolute -bottom-2 -left-2 w-full h-full bg-gradient-to-tr from-amber-400/10 to-pink-400/10 rounded-2xl -z-9 -skew-x-2 shadow-2xl">
 
-              </div>
             </motion.div>
 
             <motion.div variants={containerVariants} className="w-full md:w-1/2">
@@ -559,20 +618,22 @@ export default function LandingPage() {
                   <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-1 mt-0.5">
                     <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
                   </div>
-                  <span>Save products to your wishlist</span>
+                  <span>Compare prices across multiple retailers</span>
                 </motion.li>
                 <motion.li variants={itemVariants} className="flex items-start gap-3">
                   <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-1 mt-0.5">
                     <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
                   </div>
-                  <span>Compare prices across multiple retailers</span>
+                  <span>Save products to your wishlist</span>
                 </motion.li>
               </motion.ul>
               <motion.div variants={itemVariants} className="mt-8">
-                <Button size="lg" className="gap-2">
-                  <Image
-                    src="/placeholder.svg?height=20&width=20"
-                    alt="Chrome logo"
+                <Button
+                  size="lg"
+                  className="gap-2"
+                  onClick={() => { showCustomToast("Coming Soon!") }}
+                >
+                  <PlusCircleIcon
                     width={20}
                     height={20}
                     className="rounded-full"
@@ -707,19 +768,42 @@ function FeatureCard({
     <motion.div
       custom={index}
       variants={featureVariants}
-      className="group relative bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
+      whileHover={{
+        y: -5,
+        scale: 1.05,
+        transition: { type: "ease-in-out", duration: 0.3 },
+      }}
+      className="group relative bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow overflow-hidden "
     >
       <div className={`absolute top-0 left-0 h-2 w-full bg-gradient-to-r ${color}`}></div>
-      <div
+      <motion.div
+        whileHover={{ rotate: 360, scale: 1.1 }}
+        transition={{
+          type: "spring",
+          stiffness: 100,
+          damping: 10,
+        }}
         className={`mb-6 inline-flex items-center justify-center p-3 rounded-xl bg-gradient-to-br ${color} text-white`}
       >
         {icon}
-      </div>
+      </motion.div>
       <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{title}</h3>
       <p className="text-slate-600 dark:text-slate-300">{description}</p>
 
-      <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-slate-100 to-transparent dark:from-slate-700/30 rounded-tl-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-slate-100 to-transparent dark:from-slate-700/30 rounded-tl-full -z-10 opacity-0 group-hover:opacity-0 transition-opacity"></div>
     </motion.div>
   )
 }
 
+const showCustomToast = (msg: string) => {
+  toast.custom((t) => (
+    <ToastBar toast={t}>
+      {() => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <RocketIcon style={{ color: '#61d345', fontSize: '20px' }} />
+          <span>{msg}</span>
+        </div>
+      )}
+    </ToastBar>
+  ));
+};
