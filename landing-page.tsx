@@ -467,6 +467,9 @@ export default function LandingPage() {
                                 onClick={(e) => {
                                   localStorage.removeItem("vtonInputImage");
                                   e.preventDefault();
+                                  if (result.image.startsWith("http://")) {
+                                    result.image = result.image.replace("http://", "https://");
+                                  }
                                   localStorage.setItem("vtonInputImage", result.image);
                                   console.log("image selected for vton", result.productName, result.image);
                                   router.push("/dashboard");
