@@ -3,15 +3,7 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-
-@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap");
-
-.geist-mono-regular {
-  font-family: "Geist Mono", monospace;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-}
+@import url("https://fonts.googleapis.com/css2?family=Doto:wght,ROND@100..900,50&display=swap");
 
 .space-mono-regular {
   font-family: "Space Mono", monospace;
@@ -35,6 +27,14 @@
   font-family: "Space Mono", monospace;
   font-weight: 700;
   font-style: italic;
+}
+
+.doto-font {
+  font-family: "Doto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "ROND" 50;
 }
 
 .noise-overlay {
