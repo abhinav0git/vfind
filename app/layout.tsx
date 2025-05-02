@@ -3,6 +3,7 @@ import './globals.css'
 import { PostHogProvider } from '../components/PostHogProvider'
 import { AuthProvider } from '../lib/authContext'
 import { Toaster } from 'react-hot-toast';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   title: 'VFind - Visual Search Engine',
@@ -17,9 +18,9 @@ export default function RootLayout({ children }:
       <body>
         <PostHogProvider>
           <AuthProvider>
-            <Toaster position="top-center" reverseOrder={false} />
+            <Toaster position="top-right" reverseOrder={false} />
             <div className="relative">
-              <div className="relative z-10">{children}</div>
+              <div className="relative z-10">{children}<SpeedInsights /></div>
             </div>
           </AuthProvider>
         </PostHogProvider>

@@ -7,7 +7,7 @@ import ProtectedRoute from "../../components/ProtectedRoute"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
-import { HomeIcon as House, LogOut, Upload } from "lucide-react"
+import { CupSodaIcon, FileStack, HomeIcon as House, LineChart, LogOut, Upload } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { GoogleGenAI, Modality } from "@google/genai";
@@ -172,7 +172,7 @@ export default function DashboardPage() {
                 className="bg-violet-600 hover:bg-violet-700"
               >
                 <LogOut className="h-4 w-4" />
-                Logout
+                <span className="md:inline hidden">Logout</span>
               </Button>
             </motion.div>
           </div>
@@ -191,23 +191,22 @@ export default function DashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <motion.p
-                className="text-purple-700 opacity-80"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                Welcome, {user?.email?.split("@")[0].toUpperCase()}
-              </motion.p>
               <motion.h1
-                className="space-mono-bold text-2xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 to-violet-800 bg-clip-text text-transparent mb-4 pb-2"
+                className="space-mono-bold text-2xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 to-violet-800 bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
                 Virtual Try-On
               </motion.h1>
-
+              <motion.p
+                className="text-purple-700 opacity-80 mb-4 py-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                Welcome, {user?.email?.split("@")[0].toUpperCase()}
+              </motion.p>
             </motion.div>
 
             <motion.div
@@ -363,7 +362,7 @@ export default function DashboardPage() {
         </main>
 
         <motion.footer
-          className="py-8 text-center bg-slate-100"
+          className="py-8 text-center bg-gradient-to-bl from-purple-100 to-violet-50 w-full max-w-screen-2xl px-[8%]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
@@ -372,12 +371,14 @@ export default function DashboardPage() {
             More cool stuff on the way!
           </motion.h3>
           <motion.p
-            className="text-purple-600 opacity-70 max-w-md mx-auto"
+            className="text-purple-600 mx-auto flex flex-row flex-wrap justify-center gap-8 items-center max-w-2xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
           >
-            - Chrome extension; - 10 similar products instead of 3; - select any similar product for VTon; and more...
+            <span className="flex flex-row flex-wrap justify-center items-center gap-1"><LineChart className="h-4 w-4" />Chrome extension</span>
+            <span className="flex flex-row flex-wrap justify-center items-center gap-1"><FileStack className="h-4 w-4" />10 similar products instead of 3</span>
+            <span className="flex flex-row flex-wrap justify-center items-center gap-1">and more...<CupSodaIcon className="h-4 w-4" /></span>
           </motion.p>
         </motion.footer>
       </div>

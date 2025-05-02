@@ -6,7 +6,7 @@ import { useState, useRef } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Camera, Upload, Search, ArrowRight, CheckCircle2, ImageIcon, LayoutDashboard, LogIn, Wand2Icon, CircleXIcon, PlusCircleIcon, RocketIcon } from "lucide-react"
+import { Camera, Upload, Search, ArrowRight, CheckCircle2, ImageIcon, LayoutDashboard, LogIn, Wand2Icon, CircleXIcon, PlusCircleIcon, RocketIcon, ChromeIcon, Github } from "lucide-react"
 import { useAuth } from "./lib/authContext";
 import toast, { ToastBar } from "react-hot-toast";
 
@@ -202,18 +202,6 @@ export default function LandingPage() {
 
           <button
             onClick={() =>
-              document.getElementById("how-it-works")?.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-              })
-            }
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            How it works
-          </button>
-
-          <button
-            onClick={() =>
               document.getElementById("extension")?.scrollIntoView({
                 behavior: "smooth",
                 block: "center",
@@ -223,6 +211,21 @@ export default function LandingPage() {
           >
             Extension
           </button>
+
+          <button
+            onClick={() => {
+              toast.success("github.com/abhinav0git/vfind",
+                {
+                  duration: 4000,
+                  position: "bottom-center",
+                  icon: <Github />
+                })
+            }}
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            How it works
+          </button>
+
         </nav>
 
         <motion.div
@@ -559,7 +562,7 @@ export default function LandingPage() {
               index={1}
             />
             <FeatureCard
-              icon={<Search className="h-8 w-8" />}
+              icon={<ChromeIcon className="h-8 w-8" />}
               title="Chrome Extension"
               description="Install our Chrome extension to search for products seamlessly while browsing any website."
               color="from-amber-500 to-orange-400"
@@ -634,7 +637,10 @@ export default function LandingPage() {
                 <Button
                   size="lg"
                   className="gap-2"
-                  onClick={() => { showCustomToast("Coming Soon!") }}
+                  onClick={() => {
+                    // showCustomToast("Coming Soon!") 
+                    toast.success("Coming Soon!", { position: "bottom-right", icon: <RocketIcon /> });
+                  }}
                 >
                   <PlusCircleIcon
                     width={20}
@@ -694,7 +700,14 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="secondary"
-                className="bg-white text-primary hover:bg-white/90">
+                className="bg-white text-primary hover:bg-white/90"
+                onClick={() => {
+                  if (user) {
+                    toast.success("Already registered!", { position: "bottom-right" });
+                  }
+                  router.push("/dashboard")
+                }}
+              >
                 Get Started for Free
               </Button>
               <Button
@@ -797,16 +810,3 @@ function FeatureCard({
     </motion.div>
   )
 }
-
-const showCustomToast = (msg: string) => {
-  toast.custom((t) => (
-    <ToastBar toast={t}>
-      {() => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <RocketIcon style={{ color: '#61d345', fontSize: '20px' }} />
-          <span>{msg}</span>
-        </div>
-      )}
-    </ToastBar>
-  ));
-};
