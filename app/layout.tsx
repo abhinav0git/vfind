@@ -19,7 +19,7 @@ export default function RootLayout({ children }:
       <body>
         <PostHogProvider>
           <AuthProvider>
-            <Toaster position="top-right" reverseOrder={false} />
+            <Toaster position="top-center" reverseOrder={false} />
             <div className="relative">
               <div className="relative z-10">
                 {children}

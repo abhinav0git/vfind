@@ -10,7 +10,6 @@ import toast from "react-hot-toast"
 import { CupSodaIcon, FileStack, HomeIcon as House, LineChart, LogOut, Upload } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { GoogleGenAI, Modality } from "@google/genai";
 
 
 export default function DashboardPage() {
@@ -75,7 +74,7 @@ export default function DashboardPage() {
 
       if (response.ok) {
         setResultImage(`data:image/jpeg;base64,${data.result.data}`)
-        toast.success("Image generated successfully!", {
+        toast.success("Generation Successful!", {
           duration: 3000,
         })
       } else {

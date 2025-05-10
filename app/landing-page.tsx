@@ -7,8 +7,11 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Camera, Upload, Search, ArrowRight, CheckCircle2, ImageIcon, LayoutDashboard, LogIn, Wand2Icon, CircleXIcon, PlusCircleIcon, RocketIcon, ChromeIcon, Github } from "lucide-react"
-import { useAuth } from "./lib/authContext";
-import toast, { ToastBar } from "react-hot-toast";
+import { useAuth } from "@/lib/authContext";
+import toast from "react-hot-toast";
+import FashionDisplay from "@/components/FashionDisplay";
+import { AnimatedNames } from "@/components/AnimatedNames"
+
 
 const featureVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -166,7 +169,6 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 to-sky-100" >
-
       {/* bg decorative blobs*/}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-duration-5000"></div>
@@ -178,7 +180,7 @@ export default function LandingPage() {
 
       {/* Background noise */}
       {/* Header */}
-      <header className="w-full max-w-screen-2xl px-[10%] py-[1.25%] fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
+      <header className="w-full max-w-screen-2xl px-[10%] py-[1.25%] fixed flex items-center justify-between z-30 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
         <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <div className="bg-primary rounded-full p-2">
           </div>
@@ -217,7 +219,7 @@ export default function LandingPage() {
               toast.success("github.com/abhinav0git/vfind",
                 {
                   duration: 4000,
-                  position: "bottom-center",
+                  position: "bottom-right",
                   icon: <Github />
                 })
             }}
@@ -270,7 +272,9 @@ export default function LandingPage() {
               variants={itemVariants}
               className="space-mono-bold-italic text-4xl md:text-5xl lg:text-6xl tracking-tight text-slate-900 dark:text-white"
             >
-              Find Any Product{" "}
+              Find Any{" "}
+              <AnimatedNames names={["Product", "Shirt", "Tshirt", "Kurti", "Pants", "Jeans", "Dress", "Jacket", "Kurta"]}
+              />{" "}
               <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-2 before:bg-sky-500">
                 <span className="font-serif relative text-white">Online</span>
               </span>{" "}
@@ -534,7 +538,7 @@ export default function LandingPage() {
           id="features"
           className="py-16"
         >
-          <motion.div variants={itemVariants} className="text-center mb-16">
+          <motion.div variants={itemVariants} className="text-center mb-4">
             <div className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary">
               Key Features
             </div>
@@ -545,15 +549,9 @@ export default function LandingPage() {
               Our advanced AI technology makes finding products simple and intuitive
             </p>
           </motion.div>
+          <FashionDisplay />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Camera className="h-8 w-8 group-hover:rotate-x-2 transition-transform" />}
-              title="Upload Images"
-              description="Simply upload a photo to find similar products online from thousands of retailers."
-              color="from-blue-500 to-cyan-400"
-              index={0}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <FeatureCard
               icon={<Wand2Icon className="h-8 w-8" />}
               title="V-Ton"
@@ -571,6 +569,7 @@ export default function LandingPage() {
           </div>
         </motion.div>
 
+        {/* Features Cards */}
         {/* Chrome Extension Section */}
         <motion.div
           initial="hidden"
