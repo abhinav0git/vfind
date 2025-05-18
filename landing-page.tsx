@@ -113,16 +113,18 @@ export default function LandingPage() {
 
       toast.promise(promise, {
         loading: "Searching...",
-        success: "Search successful!",
-        error: "Search failed!",
+
       });
 
       const response = await promise;
       const data = await response.json();
 
+
       if (!response.ok) {
         console.error("Error searching with image:", response.statusText);
-      } else {
+        toast.error("Server busy! Please try later");
+      }
+      else {
         setSearchResult(data);
 
         data.results.map((result: any) => {

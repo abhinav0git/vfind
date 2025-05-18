@@ -336,11 +336,12 @@ def img_to_vector(img_url, base64_str):
 
     try:
         if img_url:
+            logging.info("Processing image URL")
             response = requests.get(img_url, timeout=5)
             response.raise_for_status()
             image = Image.open(BytesIO(response.content)).convert("RGB")
         elif base64_str:
-            print("Processing base64 image...")
+            logging.info("Processing base64 image")
             image_data = base64.b64decode(
                 base64_str.split(",")[1] if "," in base64_str else base64_str
             )
@@ -394,16 +395,20 @@ def processImgToPinecone():
 
 # search for similar images
 def search_similar_images(query_image_url=None, top_k=3, base64=None):
-
     query_vector = img_to_vector(query_image_url, base64)
     if query_vector is None:
+        logging.error("img_to_vector returned none")
         return []
 
     results = pinecone_index.query(
         vector=query_vector.tolist(), top_k=top_k, include_metadata=True
     )
 
-    matches = results.get("matches", [])
+    if "matches" not in results:
+        logging.error("matches key not found in results")
+        return []
+
+    matches = results["matches"]
     get_data_form_matches = [
         {
             "id": match["id"],
@@ -423,8 +428,7 @@ def getLinkFromDB(id: str):
         {"productId": id, "images": {"$exists": True}},
         {"_id": 0, "images": 1},
     )
-    link = link["images"][0].get("src")
-    print(link)
+    link = link["images"][0].get("src") if link else None
     return link
 
     # http://assets.myntassets.com/assets/images/31973469/2024/12/14/07109c69-53d0-40af-84fc-a0965b8639261734176009937HIGHLANDERMenSlimFitOpaqueStripedCasualShirt2.jpg   test image
@@ -433,7 +437,5 @@ def getLinkFromDB(id: str):
 if __name__ == "__main__":
     # new_products = scrape_products()
     # processImgToPinecone()
-    # search_results = search_similar_images(
-    #     "http://assets.myntassets.com/assets/images/31973469/2024/12/14/07109c69-53d0-40af-84fc-a0965b8639261734176009937HIGHLANDERMenSlimFitOpaqueStripedCasualShirt2.jpg"
-    # )
-    print("hello!")
+    search_results = search_similar_images("http://assets.myntassets.com/assets/images/31973469/2024/12/14/07109c69-53d0-40af-84fc-a0965b8639261734176009937HIGHLANDERMenSlimFitOpaqueStripedCasualShirt2.jpg")
+    print(search_results)

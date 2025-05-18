@@ -34,7 +34,9 @@ async def req_similar_prod(request: Request):
         for item in res:
             prodId = item.get("id")
             link = scraper.getLinkFromDB(prodId)
-            item["image"] = link
+            if link:
+                links.append(link)
+                item["image"] = link
         return {"results": res}
     else:
         return {"error": "Unexpected response format"}
