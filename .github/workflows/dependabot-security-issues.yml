@@ -1,0 +1,137 @@
+name: Create Issues for Dependabot Security Alerts
+
+on:
+  schedule:
+    # Run daily at 9 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: read
+  issues: write
+  security-events: read
+
+jobs:
+  create-security-issues:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get Dependabot alerts
+        id: get-alerts
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            try {
+              // Get all open Dependabot alerts
+              const { data: alerts } = await github.rest.dependabot.listAlertsForRepo({
+                owner,
+                repo,
+                state: 'open'
+              });
+              
+              console.log(`Found ${alerts.length} open Dependabot alerts`);
+              
+              // Filter for high and critical severity alerts
+              const criticalAlerts = alerts.filter(alert => 
+                alert.security_advisory.severity === 'high' || 
+                alert.security_advisory.severity === 'critical'
+              );
+              
+              console.log(`Found ${criticalAlerts.length} high/critical severity alerts`);
+              
+              // Get existing issues to avoid duplicates
+              const { data: existingIssues } = await github.rest.issues.listForRepo({
+                owner,
+                repo,
+                state: 'open',
+                labels: 'security,dependabot',
+                per_page: 100
+              });
+              
+              const existingAlertIds = new Set(
+                existingIssues
+                  .map(issue => {
+                    const match = issue.body?.match(/Alert ID: (\d+)/);
+                    return match ? match[1] : null;
+                  })
+                  .filter(Boolean)
+              );
+              
+              // Create issues for alerts that don't have one yet
+              let issuesCreated = 0;
+              
+              for (const alert of criticalAlerts) {
+                const alertId = alert.number.toString();
+                
+                // Skip if issue already exists
+                if (existingAlertIds.has(alertId)) {
+                  console.log(`Issue already exists for alert ${alertId}`);
+                  continue;
+                }
+                
+                const advisory = alert.security_advisory;
+                const vulnerability = alert.security_vulnerability;
+                
+                const issueTitle = `[Security] ${advisory.severity.toUpperCase()}: ${advisory.summary}`;
+                
+                const issueBody = `## Security Alert
+            
+            **Alert ID:** ${alert.number}
+            **Severity:** ${advisory.severity.toUpperCase()}
+            **Package:** ${vulnerability.package.name}
+            **Vulnerable Versions:** ${vulnerability.vulnerable_version_range}
+            **Patched Version:** ${vulnerability.first_patched_version?.identifier || 'N/A'}
+            
+            ### Description
+            ${advisory.description}
+            
+            ### References
+            - [GitHub Advisory](${alert.html_url})
+            - [CVE](${advisory.cve_id || 'N/A'})
+            ${advisory.references.map(ref => \`- [\${ref.url}](\${ref.url})\`).join('\\n')}
+            
+            ### Recommendation
+            ${vulnerability.first_patched_version 
+              ? \`Update \${vulnerability.package.name} to version \${vulnerability.first_patched_version.identifier} or later.\`
+              : 'Review the advisory for recommended actions.'}
+            
+            ---
+            *This issue was automatically created from a Dependabot security alert.*`;
+
+                try {
+                  const { data: issue } = await github.rest.issues.create({
+                    owner,
+                    repo,
+                    title: issueTitle,
+                    body: issueBody,
+                    labels: ['security', 'dependabot', advisory.severity]
+                  });
+                  
+                  console.log(`Created issue #${issue.number} for alert ${alertId}`);
+                  issuesCreated++;
+                } catch (error) {
+                  console.error(`Failed to create issue for alert ${alertId}:`, error.message);
+                }
+              }
+              
+              core.setOutput('issues_created', issuesCreated);
+              core.setOutput('total_critical_alerts', criticalAlerts.length);
+              
+            } catch (error) {
+              core.setFailed(`Error processing Dependabot alerts: ${error.message}`);
+            }
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Dependabot Security Alert Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Issues created: ${{ steps.get-alerts.outputs.issues_created || 0 }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Total high/critical alerts: ${{ steps.get-alerts.outputs.total_critical_alerts || 0 }}" >> $GITHUB_STEP_SUMMARY
