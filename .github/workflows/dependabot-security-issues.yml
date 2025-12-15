@@ -51,7 +51,7 @@ jobs:
                 owner,
                 repo,
                 state: 'open',
-                labels: 'security,dependabot',
+                labels: ['security', 'dependabot'],
                 per_page: 100
               });
               
@@ -94,7 +94,7 @@ jobs:
             
             ### References
             - [GitHub Advisory](${alert.html_url})
-            - [CVE](${advisory.cve_id || 'N/A'})
+            ${advisory.cve_id ? \`- [CVE](\${advisory.cve_id})\` : '- CVE: N/A'}
             ${advisory.references.map(ref => \`- [\${ref.url}](\${ref.url})\`).join('\\n')}
             
             ### Recommendation
