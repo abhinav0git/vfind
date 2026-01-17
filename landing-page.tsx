@@ -16,10 +16,10 @@ const featureVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.1,
-      type: "spring",
-      stiffness: 100,
-      damping: 15,
+      delay: i * 0.08,
+      type: 'spring',
+      stiffness: 300,
+      damping: 20,
     },
   }),
 }
@@ -121,6 +121,7 @@ export default function LandingPage() {
       const data = await response.json();
 
       if (!response.ok) {
+        throw new Error(response.statusText);
         console.error("Error searching with image:", response.statusText);
       } else {
         setSearchResult(data);
@@ -157,7 +158,7 @@ export default function LandingPage() {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
         damping: 15,
       },
@@ -165,20 +166,9 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 to-sky-100" >
-
-      {/* bg decorative blobs*/}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-duration-5000"></div>
-        <div className="absolute top-10 right-10 w-80 h-80 bg-[#dddbd7] rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-2000 animation-duration-6000"></div>
-        <div className="absolute -bottom-40 left-40 w-96 h-96 bg-violet-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000 animation-duration-7000"></div>
-        <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-3000 animation-duration-8000"></div>
-      </div>
-
-
-      {/* Background noise */}
+    <div className="flex flex-col items-center min-h-screen bg-background" >
       {/* Header */}
-      <header className="w-full max-w-screen-2xl px-[10%] py-[1.25%] fixed flex items-center justify-between z-20 bg-transparent bg-[radial-gradient(transparent_1px,#ffffff60_1px)] bg-[size:4px_4px] backdrop-blur-[6px] mask-[linear-gradient(rgb(0,0,0)_60%,rgba(0,0,0,0)_100%)]">
+      <header className="w-full max-w-screen-2xl px-[10%] py-[1.25%] fixed flex items-center justify-between z-20 bg-background/80 backdrop-blur-sm border-b border-border">
         <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <div className="bg-primary rounded-full p-2">
           </div>
@@ -187,7 +177,7 @@ export default function LandingPage() {
           </span>
         </motion.div>
 
-        <nav className="hidden md:flex gap-6 space-mono-regular">
+        <nav className="hidden md:flex gap-6 font-sans-medium">
           <button
             onClick={() =>
               document.getElementById("features")?.scrollIntoView({
@@ -239,7 +229,7 @@ export default function LandingPage() {
             }}
           >
             {user ? (<LayoutDashboard color="#ffffff" />) : (<LogIn color="#ffffff" />)}
-            <span className="md:inline hidden space-mono-regular">
+            <span className="md:inline hidden font-sans-medium">
               {user ? "Dashboard" : "Sign Up"}
             </span>
           </Button>
@@ -254,7 +244,7 @@ export default function LandingPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-col md:flex-row items-center gap-12 py-8"
+          className="flex flex-col md:flex-row items-center gap-12 py-8 mt-[6%]"
         >
           {/* Hero Section Heading and Para*/}
           <motion.div variants={itemVariants} className="text-left max-w-xl">
@@ -262,21 +252,21 @@ export default function LandingPage() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-block px-3 py-1 mb-6 text-sm font-medium rounded-full bg-primary/10 text-primary"
+              className="inline-block px-3 py-1 mb-6 text-sm font-medium rounded-full bg-muted text-foreground border border-border"
             >
-              🔍Visual Search Tech!
+              👁️ Visual Search Tech
             </motion.div>
             <motion.h1
               variants={itemVariants}
-              className="space-mono-bold-italic text-4xl md:text-5xl lg:text-6xl tracking-tight text-slate-900 dark:text-white"
+              className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-tight text-foreground"
             >
               Find Any Product{" "}
-              <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-2 before:bg-sky-500">
-                <span className="font-serif relative text-white">Online</span>
+              <span className="relative inline-block">
+                <span className="font-serif relative border-foreground">Online</span>
               </span>{" "}
               with an Image
             </motion.h1>
-            <motion.p variants={itemVariants} className="text-lg text-slate-600 dark:text-slate-300 mt-6">
+            <motion.p variants={itemVariants} className="text-lg text-muted-foreground mt-6">
               Upload an image to discover matching products instantly. Our AI-powered visual
               search finds exactly what you're looking for.
             </motion.p>
@@ -315,7 +305,7 @@ export default function LandingPage() {
                 priority
               />
             </motion.div>
-            <div className="absolute -bottom-4 -right-4 w-full h-full bg-gradient-to-br from-primary/10 to-purple-400/10 rounded-2xl -z-9 opacity-60"></div>
+            <div className="absolute -bottom-2 -left-2 w-[100%] h-[100%] bg-slate-200 rounded-2xl -z-9"></div>
           </motion.div>
         </motion.div>
 
@@ -327,16 +317,14 @@ export default function LandingPage() {
           className="relative mt-20 mb-24"
           id="upload-section"
         >
-          <div
-            className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-400/20 rounded-3xl transform -bottom-4 -left-4 right-4 top-4 scale-102">
-          </div>
-          <div className="relative bg-white dark:bg-slate-800 shadow-xl rounded-3xl p-8 overflow-hidden">
+          <div className="absolute inset-0 bg-slate-200 rounded-3xl transform -bottom-2 -left-2 right-2 top-2 scale-100"></div>
+          <div className="relative bg-card border border-border rounded-3xl p-8 overflow-hidden">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <h2 className="text-2xl font-bold mb-4">
                   Upload Your Image
                 </h2>
-                <p className="text-slate-600 dark:text-slate-300 mb-6">
+                <p className="text-muted-foreground mb-6">
                   Drag and drop your image to find similar products online.
                 </p>
 
@@ -344,8 +332,8 @@ export default function LandingPage() {
                   className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-colors group ${isDragging
                     ? "border-primary bg-primary/5"
                     : isUploaded
-                      ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                      : "border-slate-300 dark:border-slate-600 hover:border-primary"
+                      ? "border-muted-foreground bg-accent"
+                      : "border-border hover:border-foreground"
                     }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -362,34 +350,22 @@ export default function LandingPage() {
 
                   <AnimatePresence mode="wait">
                     {isUploaded ? (
-                      <>
-                        <motion.div
-                          key="uploaded"
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          className="flex flex-col items-center"
-                        >
-                          <CheckCircle2 className="h-12 w-12 text-green-500 mb-2" />
-                          <p className="text-green-600 dark:text-green-400 font-medium">Image uploaded successfully!</p>
-                        </motion.div>
-                        <Button size="sm" variant="outline" onClick={handleRetry} className="mt-2 bg-red-400">
-                          <CircleXIcon className="h-4 w-4 animate-pulse" />
-                          Retry!?
-                        </Button>
-                      </>
-                    ) : (
                       <motion.div
-                        key="upload-prompt"
+                        key="uploaded"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
-                        className="flex flex-col items-center cursor-pointer"
+                        className="flex flex-col items-center"
                       >
-                        <Upload className="h-12 w-12 text-slate-400 mb-2 group-hover:-translate-y-2 group-hover:scale-[1.1] transition delay-60 duration-200 ease-in-out" />
-                        <p className="font-medium">Drag & drop your image here or click to browse</p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Supports JPG & PNG (max 5MB)</p>
+                        <CheckCircle2 className="h-12 w-12 text-foreground mb-2" />
+                        <p className="text-foreground font-medium">Image uploaded successfully!</p>
                       </motion.div>
+                    ) : (
+                      <div className="flex flex-col items-center cursor-pointer">
+                        <Upload className="h-12 w-12 text-muted-foreground mb-2 group-hover:-translate-y-2 group-hover:scale-[1.1] transition delay-60 duration-200 ease-in-out" />
+                        <p className="font-medium">Drag & drop your image here or click to browse</p>
+                        <p className="text-sm text-muted-foreground mt-1">Supports JPG & PNG (max 5MB)</p>
+                      </div>
                     )}
                   </AnimatePresence>
                 </div>
@@ -410,16 +386,19 @@ export default function LandingPage() {
                       className="relative w-full max-w-xs aspect-[3/4] rounded-xl overflow-hidden shadow-lg sm:aspect-square max-sm:h-60 max-sm:w-auto"
                     >
                       <Image src={image || "/placeholder.svg"} alt="Uploaded preview" fill className="object-cover" />
+                      <Button size="sm" variant="ghost" onClick={handleRetry} className="absolute top-2 right-2 z-10">
+                        <CircleXIcon className="h-4 w-4 text-gray-500" />
+                      </Button>
                     </motion.div>
                   ) : (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="flex flex-col items-center justify-center p-8 rounded-xl bg-slate-100 w-full max-w-xs aspect-square"
+                      className="flex flex-col items-center justify-center p-8 rounded-xl bg-muted w-full max-w-xs aspect-square"
                     >
-                      <ImageIcon className="h-16 w-16 text-slate-400 mb-4" />
-                      <p className="text-slate-500 dark:text-slate-400 text-center">
+                      <ImageIcon className="h-16 w-16 text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground text-center">
                         Your image will appear here once uploaded
                       </p>
                     </motion.div>
@@ -439,8 +418,8 @@ export default function LandingPage() {
                   className="mt-8 w-full"
                 >
                   {searchResult.results && searchResult.results.length > 0 ? (
-                    <div className="bg-white/50 backdrop-blur-md rounded-xl p-4">
-                      <h2 className="text-2xl font-bold mb-6 text-center text-sky-500">
+                    <div className="bg-card border border-border rounded-xl p-4">
+                      <h2 className="text-2xl font-bold mb-6 text-center text-foreground">
                         Search Results
                       </h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -450,13 +429,13 @@ export default function LandingPage() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1 }}
-                            className={`group flex flex-col bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100 
+                            className={`group flex flex-col bg-card rounded-lg border border-border hover:border-foreground transition-all duration-300 
                               ${hoveredIndex !== null && hoveredIndex !== index ? 'opacity-40 blur-[4px] scale-90' : ''
                               }`}
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
                           >
-                            <div className="relative aspect-[3/4] w-full bg-slate-50 max-sm:h-60 group">
+                            <div className="relative aspect-[3/4] w-full bg-muted max-sm:h-60 group">
                               <Image
                                 src={result.image || "/placeholder.svg?height=160&width=160"}
                                 alt={result.productName || "Product image"}
@@ -466,7 +445,7 @@ export default function LandingPage() {
                               />
 
                               <button
-                                className="hidden group-hover:flex items-center justify-center absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-1.5 md:px-4 md:py-2 rounded-md bg-primary text-white text-xs md:text-sm font-medium shadow-md hover:bg-blue-400 hover:shadow-lg transition-all"
+                                className="hidden group-hover:flex items-center justify-center absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-1.5 md:px-4 md:py-2 rounded-md bg-primary text-primary-foreground text-xs md:text-sm font-medium hover:bg-foreground transition-all"
                                 onClick={(e) => {
                                   localStorage.removeItem("vtonInputImage");
                                   e.preventDefault();
@@ -483,12 +462,9 @@ export default function LandingPage() {
                             </div>
 
                             <div className="p-3">
-                              <h3 className="font-medium max-sm:text-xs text-slate-800 line-clamp-2 group-hover:font-bold group-hover:text-lg transition-all group-hover:underline">
+                              <h3 className="font-medium max-sm:text-xs text-foreground line-clamp-2 group-hover:font-bold transition-all group-hover:underline">
                                 {result.productName}
                               </h3>
-                              {/* {result.price && (
-                                <p className="text-sm font-semibold text-primary mt-1">{result.price}</p>
-                              )} */}
                             </div>
                           </motion.div>
                         ))}
@@ -498,7 +474,7 @@ export default function LandingPage() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="mt-4 p-4 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg shadow-sm"
+                      className="mt-4 p-4 bg-muted border border-border text-muted-foreground rounded-lg"
                     >
                       <h3 className="text-lg font-semibold flex items-center">
                         <svg
@@ -535,13 +511,13 @@ export default function LandingPage() {
           className="py-16"
         >
           <motion.div variants={itemVariants} className="text-center mb-16">
-            <div className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary">
+            <div className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-muted text-foreground border border-border">
               Key Features
             </div>
             <h2 className="text-3xl md:text-4xl font-bold">
               Discover the Power of Visual Search
             </h2>
-            <p className="text-slate-600 dark:text-slate-300 mt-4 max-w-2xl mx-auto">
+            <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
               Our advanced AI technology makes finding products simple and intuitive
             </p>
           </motion.div>
@@ -551,21 +527,21 @@ export default function LandingPage() {
               icon={<Camera className="h-8 w-8 group-hover:rotate-x-2 transition-transform" />}
               title="Upload Images"
               description="Simply upload a photo to find similar products online from thousands of retailers."
-              color="from-blue-500 to-cyan-400"
+              color=""
               index={0}
             />
             <FeatureCard
               icon={<Wand2Icon className="h-8 w-8" />}
               title="V-Ton"
               description="Use search result product and try it on your own image. Just click on the product image and see the magic!"
-              color="from-purple-500 to-pink-400"
+              color=""
               index={1}
             />
             <FeatureCard
               icon={<ChromeIcon className="h-8 w-8" />}
               title="Chrome Extension"
               description="Install our Chrome extension to search for products seamlessly while browsing any website."
-              color="from-amber-500 to-orange-400"
+              color=""
               index={2}
             />
           </div>
@@ -593,7 +569,7 @@ export default function LandingPage() {
                   alt="chrome extension illustration"
                   width={50}
                   height={50}
-                  className="w-full h-auto rounded-2xl shadow-xl"
+                  className="w-full h-auto rounded-2xl border border-border"
                 />
               </motion.div>
 
@@ -602,33 +578,33 @@ export default function LandingPage() {
             <motion.div variants={containerVariants} className="w-full md:w-1/2">
               <motion.div
                 variants={itemVariants}
-                className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary"
+                className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-muted text-foreground border border-border"
               >
                 Browser Extension
               </motion.div>
               <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl font-bold">
                 Search While You Browse
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-slate-600 dark:text-slate-300 mt-4">
+              <motion.p variants={itemVariants} className="text-muted-foreground mt-4">
                 Install our Chrome extension to search for products seamlessly while browsing any website. Just
                 right-click on any image to find where to buy it.
               </motion.p>
               <motion.ul variants={containerVariants} className="mt-6 space-y-4">
                 <motion.li variants={itemVariants} className="flex items-start gap-3">
-                  <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-1 mt-0.5">
-                    <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <div className="rounded-full bg-muted p-1 mt-0.5">
+                    <CheckCircle2 className="h-4 w-4 text-foreground" />
                   </div>
                   <span>Right-click on any image to search</span>
                 </motion.li>
                 <motion.li variants={itemVariants} className="flex items-start gap-3">
-                  <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-1 mt-0.5">
-                    <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <div className="rounded-full bg-muted p-1 mt-0.5">
+                    <CheckCircle2 className="h-4 w-4 text-foreground" />
                   </div>
                   <span>Compare prices across multiple retailers</span>
                 </motion.li>
                 <motion.li variants={itemVariants} className="flex items-start gap-3">
-                  <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-1 mt-0.5">
-                    <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <div className="rounded-full bg-muted p-1 mt-0.5">
+                    <CheckCircle2 className="h-4 w-4 text-foreground" />
                   </div>
                   <span>Save products to your wishlist</span>
                 </motion.li>
@@ -638,7 +614,6 @@ export default function LandingPage() {
                   size="lg"
                   className="gap-2"
                   onClick={() => {
-                    // showCustomToast("Coming Soon!") 
                     toast.success("Coming Soon!", { position: "bottom-right", icon: <RocketIcon /> });
                   }}
                 >
@@ -665,11 +640,9 @@ export default function LandingPage() {
           transition={{ type: "spring", stiffness: 50 }}
           className="mt-20 mb-10 relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#c177ff] to-[#e496ff] rounded-3xl transform rotate-1 scale-[103%] opacity-50"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_40%)]"></div>
-          <div className="relative bg-gradient-to-r from-primary to-purple-600 text-white text-center py-16 px-8 rounded-3xl shadow-xl overflow-hidden">
-
-
+          {/* <div className="absolute inset-0 bg-muted rounded-3xl transform rotate-1 scale-[103%]"></div> */}
+          <div className="absolute inset-0"></div>
+          <div className="relative bg-primary text-primary-foreground text-center py-16 px-8 rounded-3xl overflow-hidden">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -684,7 +657,7 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="text-xl mt-4 max-w-2xl mx-auto text-white/90"
+              className="text-xl mt-4 max-w-2xl mx-auto text-primary-foreground/80"
             >
               Stop searching with words when you can search with images.
               <br />
@@ -700,7 +673,7 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="secondary"
-                className="bg-white text-primary hover:bg-white/90"
+                className="bg-background text-foreground hover:bg-accent"
                 onClick={() => {
                   if (user) {
                     toast.success("Already registered!", { position: "bottom-right" });
@@ -713,7 +686,7 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="link"
-                className="bg-white text-primary hover:bg-white/95 hover:-translate-y-1 transition-transform duration-100 ease-in-out"
+                className="bg-background text-foreground hover:bg-accent hover:-translate-y-1 transition-transform duration-100 ease-in-out"
                 onClick={() => window.open("https://www.loom.com/share/f7173cbfa4784cb3ac08b5bad9c06149")}>
                 Watch Demo?
               </Button>
@@ -723,7 +696,7 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      < footer className="w-full bg-cyan-50 border-t border-slate-200 py-8 border-t-transparent rounded-t-xl" >
+      < footer className="w-full bg-background border-t border-border py-8" >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
@@ -735,7 +708,7 @@ export default function LandingPage() {
             <div className="flex gap-20 md:gap-8">
               <a
                 href="#"
-                className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors relative group"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors relative group"
                 onClick={(e) => e.preventDefault()}
               >
                 Privacy
@@ -745,7 +718,7 @@ export default function LandingPage() {
               </a>
               <a
                 href="#"
-                className="text-sm text-slate-600 hover:text-primary transition-colors relative group"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors relative group"
                 onClick={(e) => e.preventDefault()}
               >
                 Terms
@@ -753,17 +726,17 @@ export default function LandingPage() {
                   wip!
                 </span>
               </a>
-              <a href="mailto:abhinav07c@gmail.com" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+              <a href="mailto:abhinav07c@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Contact
               </a>
             </div>
-            <div className="text-sm text-slate-500 dark:text-slate-500">
+            <div className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} VFind. All rights reserved.
             </div>
           </div>
         </div>
       </footer >
-    </div>
+    </div >
   )
 }
 
@@ -784,29 +757,16 @@ function FeatureCard({
     <motion.div
       custom={index}
       variants={featureVariants}
-      whileHover={{
-        y: -5,
-        scale: 1.05,
-        transition: { type: "ease-in-out", duration: 0.3 },
-      }}
-      className="group relative bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow overflow-hidden "
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="group relative bg-card border border-border rounded-xl p-8 overflow-hidden"
     >
-      <div className={`absolute top-0 left-0 h-2 w-full bg-gradient-to-r ${color}`}></div>
-      <motion.div
-        whileHover={{ rotate: 360, scale: 1.1 }}
-        transition={{
-          type: "spring",
-          stiffness: 100,
-          damping: 10,
-        }}
-        className={`mb-6 inline-flex items-center justify-center p-3 rounded-xl bg-gradient-to-br ${color} text-white`}
-      >
+      <div className="mb-6 inline-flex items-center justify-center p-3 rounded-xl bg-muted text-foreground">
         {icon}
-      </motion.div>
-      <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{title}</h3>
-      <p className="text-slate-600 dark:text-slate-300">{description}</p>
-
-      <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-slate-100 to-transparent dark:from-slate-700/30 rounded-tl-full -z-10 opacity-0 group-hover:opacity-0 transition-opacity"></div>
+      </div>
+      <h3 className="text-xl font-bold mb-3">{title}</h3>
+      <p className="text-muted-foreground">{description}</p>
+      <div className="absolute bottom-0 right-0 w-32 h-32 bg-muted rounded-tl-full -z-10 opacity-0 group-hover:opacity-50 transition-opacity"></div>
     </motion.div>
   )
 }

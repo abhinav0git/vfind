@@ -74,7 +74,8 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        customFont: ['"Space Mono"', "monospace"],
+        serif: ['"Instrument Serif"', 'serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
       }
     },
   },

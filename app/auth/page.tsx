@@ -87,13 +87,13 @@ export default function AuthPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-50 to-violet-50">
+            <div className="flex justify-center items-center min-h-screen bg-background">
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.5, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
                 >
-                    <Loader2 className="h-12 w-12 text-purple-600 animate-spin" />
+                    <Loader2 className="h-12 w-12 text-foreground animate-spin" />
                 </motion.div>
             </div>
         )
@@ -103,7 +103,7 @@ export default function AuthPage() {
         <motion.div
             initial="hidden"
             animate="visible"
-            className="min-h-screen bg-gradient-to-br from-purple-50 to-violet-50 flex flex-col"
+            className="min-h-screen bg-background flex flex-col"
         >
             <motion.header
                 variants={fadeIn}
@@ -121,7 +121,7 @@ export default function AuthPage() {
                     <Button
                         size="sm"
                         onClick={() => router.push("/")}
-                        className="bg-white text-purple-700 hover:bg-purple-100 border border-purple-200"
+                        className="bg-muted text-foreground hover:bg-accent border border-border"
                     >
                         Home
                     </Button>
@@ -134,10 +134,10 @@ export default function AuthPage() {
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-purple-100"
+                        className="bg-card/80 backdrop-blur-md p-8 rounded-2xl border border-border"
                     >
                         <motion.h2
-                            className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-violet-600"
+                            className="text-3xl font-bold mb-8 text-center text-foreground font-serif"
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.3 }}
@@ -153,7 +153,7 @@ export default function AuthPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white/50 backdrop-blur-sm transition-all"
+                                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-foreground bg-background backdrop-blur-sm transition-all"
                                 />
                             </motion.div>
 
@@ -164,7 +164,7 @@ export default function AuthPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white/50 backdrop-blur-sm transition-all"
+                                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-foreground bg-background backdrop-blur-sm transition-all"
                                 />
                             </motion.div>
 
@@ -174,7 +174,7 @@ export default function AuthPage() {
                                 whileTap={{ scale: 0.98 }}
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full bg-gradient-to-r from-purple-600 to-violet-600 text-white py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-70 flex items-center justify-center"
+                                className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-70 flex items-center justify-center"
                             >
                                 {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mr-2" /> : null}
                                 {isSignup ? "Create Account" : "Sign In"}
@@ -186,7 +186,7 @@ export default function AuthPage() {
                                 {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
                                 <motion.button
                                     onClick={() => setIsSignup(!isSignup)}
-                                    className="text-purple-600 font-medium hover:underline"
+                                    className="text-foreground font-medium hover:underline"
                                     whileTap={{ scale: 0.95 }}
                                 >
                                     {isSignup ? "Sign In" : "Create Account"}
@@ -195,9 +195,9 @@ export default function AuthPage() {
                         </motion.div>
 
                         <motion.div variants={fadeIn} className="mt-8 flex items-center justify-center">
-                            <div className="w-full border-t border-purple-100" />
-                            <span className="mx-4 text-gray-500 bg-white/80 px-2">or</span>
-                            <div className="w-full border-t border-purple-100" />
+                            <div className="w-full border-t border-border" />
+                            <span className="mx-4 text-muted-foreground bg-card/80 px-2">or</span>
+                            <div className="w-full border-t border-border" />
                         </motion.div>
 
                         <motion.button
@@ -206,7 +206,7 @@ export default function AuthPage() {
                             whileTap={{ scale: 0.98 }}
                             onClick={handleGoogleSignIn}
                             disabled={isSubmitting}
-                            className="mt-6 w-full bg-white border border-purple-200 text-gray-700 py-3 rounded-lg hover:bg-purple-50 flex items-center justify-center gap-3 transition-all shadow-sm disabled:opacity-70"
+                            className="mt-6 w-full bg-card border border-border text-foreground py-3 rounded-lg hover:bg-accent flex items-center justify-center gap-3 transition-all disabled:opacity-70"
                         >
                             {isSubmitting ? (
                                 <Loader2 className="h-5 w-5 animate-spin" />

@@ -1,32 +1,54 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 
 # next.js
 /.next/
-/out/
+ /out/
+ /build
 
 # production
 /build
 
-# debug
+# debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
 # env files
 .env*
 .venv
+.env
+.env.local
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.env
-.env.local
 
-#custom
-app/dashboard/test.json
+# macOS system files
+*.DS_Store
+
+# IDE / editor
+.idea/
+.vscode/
+*.sublime-workspace
+
+# test coverage
+coverage/
+
+# lock files (uncomment if you want to ignore them)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# other build artefacts
+dist/
+tmp/
+
+# miscellaneous
+*.tmp
+*.bak
