@@ -18,7 +18,7 @@ requests==2.32.3
 six==1.17.0
 soupsieve==2.6
 typing_extensions==4.12.2
-urllib3==2.3.0
+urllib3==2.6.3
 yarl==1.18.3
 fastapi
 uvicorn
